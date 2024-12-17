@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" href="C:\Users\uSer\Downloads\portfolio\image\fav-icon.png" type="image/x-icon">
+    <link rel="stylesheet" href="style.css">
+    <title>Amar Shrestha | QA</title>
+
+</head>
+<body>
+
+    <button id="scroll-to-top" class="scroll-to-top"><i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script>
+        // Get the button
+        const scrollToTopButton = document.getElementById('scroll-to-top');
+
+        // Show the button when scrolling down
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                scrollToTopButton.classList.add('visible');
+            } else {
+                scrollToTopButton.classList.remove('visible');
+            }
+        });
+
+        // Scroll to the top when the button is clicked
+        scrollToTopButton.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    </script>
+
+    <nav class="navbar" id="navbar">
+        <div class="logo">Amar Shrestha<span class="dot">.</span></div>
+        <ul class="nav-links">
+            <li><a href="#home">Home</a></li> <!-- Home button added -->
+            <li><a href="#about">About Me</a></li>
+            <li><a href="#education">Education</a></li>
+            <li><a href="#experience">Experience</a></li>
+            <li><a href="#get-in-touch">Contact</a></li>
+        </ul>
+    </nav>
+    
+    <section id="home" class="home-section">
+        <!-- Home Section with About Me content -->
+        <div class="home-content">
+            <!-- Profile Image -->
+            <div class="home-image">
+                <img src="C:\Users\uSer\Documents\portfolio\image\Home-img.png" alt="Profile Image">
+            </div>
+    
+            <!-- Text Content -->
+            <div class="home-text">
+                <h2>Hi There, I'm</h2>
+                <h1>Amar Shrestha</h1>
+                <p id="typing-effect"></p>
+                <div class="social-icons">
+                    <a href="https://www.linkedin.com/in/amar-shrestha-a7b2b8247/" target="_blank"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://www.facebook.com/xrestha.amar" target="_blank"><i class="fab fa-facebook"></i></a>
+                    <a href="https://www.instagram.com/amar__shrestha/" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="https://telegram.me/AMS331" target="_blank"><i class="fab fa-telegram-plane"></i></a>
+                    <a href="mailto:amarshrestha331@gmail.com" target="_blank"><i class="fa fa-envelope"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <section id="about">
+        <div class="about-content">
+            <!-- Text Content -->
+            <div class="about-text">
+                <h1>About Me</h1>
+                <p>I began my professional journey in digital marketing with a focus on SEO in 2022, but I transitioned to Quality Assurance (QA) in 2024. I am an IT graduate and am currently working as a QA Engineer at Searchable Design, an IT company in Kathmandu, Nepal. I am passionate about the QA field and believe that testing is not just about creating and validating test cases; it's a continuous process aimed at improving software quality. To me, testing goes beyond finding bugs, it's about collaborating with my team to proactively identify potential issues before even writing a single line of code.</p>
+            </div>
+            
+            <!-- Profile Image -->
+            <div class="about-image">
+                <img src="C:\Users\uSer\Documents\portfolio\image\about-img.png" alt="Profile Image">
+            </div>
+        </div>
+    </section>
+
+    <section id="skill-language">
+        <div class="skill-language-content-1">
+            <!-- Text Content -->
+            <div class="skill-text">
+                <h1>Skill</h1>
+            </div>
+            <div class="main">
+                <div class="container">
+                    <!-- 1st row -->
+                    <div>1</div>
+                    <div>2</div>
+                    <div>3</div>
+        
+                    <!-- 2nd row (removed hexagon touched by red line) -->
+                    <div>4</div>
+                    <div>5</div> <!-- Removed this hexagon -->
+                    <div>6</div>
+        
+                    <!-- 3rd row -->
+                    <div>7</div>
+                    <div>8</div>
+                    <div>9</div>
+                    <div>10</div>
+                    <div>11</div>
+                    <div>12</div>
+                    <div>13</div>
+                    <div>14</div>
+                    <div>15</div>
+                    <div>16</div>
+                    <div>17</div>
+                    <div>18</div>
+                </div>
+            </div>
+        </div>    
+
+        <div class="skill-language-content-2">
+            <div class="language-container">
+                <h1>Languages</h1>
+                <button class="language-button">English</button>
+                <button class="language-button">Nepali</button>
+                <button class="language-button">Nepal Bhasa</button>
+                <button class="language-button">Hindi</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="education" class="education-section">
+        <h1 class="section-title">Education</h1>
+        <div class="education-timeline">
+            <!-- Education Item 1 -->
+            <div class="education-item">
+                <div class="education-image">
+                    <img src="C:\Users\uSer\Documents\portfolio\image\sxc-img.png" alt="Education Image 1">
+                </div>
+                <div class="education-content">
+                    <h2>Bachelors in Information Management</h2>
+                    <p>St. Xavier’s College, Maitighar, Kathmandu, Nepal</p>
+                    <p>2019-2024</p>
+                </div>
+            </div>
+    
+            <!-- Education Item 2 -->
+            <div class="education-item">
+                <div class="education-image">
+                    <img src="C:\Users\uSer\Documents\portfolio\image\gcm-img.png" alt="Education Image 2">
+                </div>
+                <div class="education-content">
+                    <h2>High School</h2>
+                    <p>Global College of Management, Mid-Baneshwor, Kathmandu, Nepal</p>
+                    <p>2017-2019</p>
+                </div>
+            </div>
+    
+            <!-- Education Item 3 -->
+            <div class="education-item">
+                <div class="education-image">
+                    <img src="C:\Users\uSer\Documents\portfolio\image\paragon-img.png" alt="Education Image 3">
+                </div>
+                <div class="education-content">
+                    <h2>Secondary Education Examination</h2>
+                    <p>Paragon Public School, Tilganga, Kathmandu, Nepal</p>
+                    <p>2017</p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section id="experience">
+        <h1 class="section-title">Experience</h1>
+        <div class="experience-container">
+            <!-- Experience Card 1 -->
+            <div class="experience-card">
+                <div class="experience-header">
+                    <div class="experience-logo">
+                        <a href="https://www.searchabledesign.com/index.html" target="_blank">
+                        <img src="C:\Users\uSer\Documents\portfolio\image\SD-Logo-img.png" alt="Company Logo">
+                        </a>
+                    </div>
+                    <div class="experience-timeline">
+                        <span class="timeline-date">2024 - Present</span>
+                    </div>
+                </div>
+                <div class="experience-content">
+                    <h3>
+                     <span class="highlight">Quality Assurance Analyst</span>
+                    </h3>
+                    <ul class="experience-details">
+                        <li>Performed manual and automated testing to ensure product quality.</li>
+                        <li>Collaborated with development teams to identify and resolve bugs.</li>
+                        <li>Created test plans, cases, and reported defects for efficient tracking.</li>
+                        <li>Enhanced testing processes and tools to improve overall efficiency.</li>
+                    </ul>
+                </div>
+            </div>
+    
+            <!-- Experience Card 2 -->
+            <div class="experience-card">
+                <div class="experience-header">
+                    <div class="experience-logo">
+                        <a href="https://www.searchabledesign.com/index.html" target="_blank">
+                        <img src="C:\Users\uSer\Documents\portfolio\image\SD-Logo-img.png" alt="Company Logo">
+                        </a>
+                    </div>
+                    <div class="experience-timeline">
+                        <span class="timeline-date">2022 - 2023</span>
+                    </div>
+                </div>
+                <div class="experience-content">
+                    <h3>
+                    <span class="highlight">Digital Marketing with SEO</span>
+                    </h3>
+                    <ul class="experience-details">
+                        <li>Managed SEO, social media, and marketing strategies for growth.</li>
+                        <li>Designed banners, executed ads, and analyzed performance metrics.</li>
+                        <li>Assisted recruitment and expanded reach through executive networking.</li>
+                        <li>Delivered email campaigns and contributed innovative marketing ideas.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="get-in-touch" id="get-in-touch">
+        <div class="form-container">
+          <h2>Get in Touch</h2>
+
+          <script src="https://smtpjs.com/v3/smtp.js"></script>
+
+
+          <form action="#" method="post">
+            <div class="form-group">
+              <label for="name">Name</label>
+              <input type="text" id="name" name="name" placeholder="Enter your name" required>
+            </div>
+            <div class="form-group">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" placeholder="Enter your email" required>
+            </div>
+            <div class="form-group">
+              <label for="subject">Subject</label>
+              <input type="text" id="subject" name="subject" placeholder="Enter the subject" required>
+            </div>
+            <div class="form-group">
+              <label for="message">Message</label>
+              <textarea id="message" name="message" placeholder="Write your message" required></textarea>
+            </div>
+            <button id="sendEmailButton" type="button">Send Message</button>
+        </form>
+        </div>
+
+        <script>
+            document.getElementById("sendEmailButton").addEventListener("click", function () {
+              const name = document.getElementById("name").value;
+              const email = document.getElementById("email").value;
+              const subject = document.getElementById("subject").value;
+              const message = document.getElementById("message").value;
+          
+              if (!name || !email || !subject || !message) {
+                alert("Please fill out all fields before sending.");
+                return;
+              }
+          
+              Email.send({
+                Host: "smtp.gmail.com", // Replace with your SMTP server
+                Username: "amarshrestha332@gmail.com",   // Replace with your SMTP username
+                Password: "fzcxruhnxscdkbdo",            // Replace with your SMTP password
+                To: "amarshrestha331@gmail.com",    // Replace with the recipient's email
+                From: email,
+                Subject: subject,
+                Body: `Name: ${name}<br>Email: ${email}<br>Message:<br>${message}`,
+              }).then((message) => alert("Email successfully sent!"))
+                .catch((error) => alert("Failed to send email: " + error.message));
+            });
+          </script>
+          
+          
+      
+        <div class="contact-image">
+          <a href="tel:+977-9818740778">
+            <img src="C:\Users\uSer\Documents\portfolio\image\phone-img.png" alt="Contact Image" />
+          </a>
+        </div>
+      </section>
+      
+    <script>
+        // Change navbar style on scroll
+        const navbar = document.getElementById('navbar');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        const text = "Quality Assurance Analyst.";
+        let index = 0;
+
+        function typeEffect() {
+            const typingElement = document.getElementById("typing-effect");
+            if (index < text.length) {
+                typingElement.innerHTML += text.charAt(index);
+                index++;
+                setTimeout(typeEffect, 50); // Adjust typing speed here (in milliseconds)
+            }
+        }
+
+        // Start the typing effect
+        typeEffect();
+    </script>
+</body>
+<footer>
+    <div class="footer-content">
+        <div class="footer-social-icons">
+            <a href="https://www.linkedin.com/in/amar-shrestha-a7b2b8247/" target="_blank"><i class="fab fa-linkedin"></i></a>
+            <a href="https://www.facebook.com/xrestha.amar" target="_blank"><i class="fab fa-facebook"></i></a>
+            <a href="https://www.instagram.com/amar__shrestha/" target="_blank"><i class="fab fa-instagram"></i></a>
+            <a href="https://telegram.me/AMS331" target="_blank"><i class="fab fa-telegram-plane"></i></a>
+            <a href="mailto:amarshrestha331@gmail.com" target="_blank"><i class="fa fa-envelope"></i></a>
+        </div>
+        <p class="footer-message">Crafted with love</p>
+    </div>
+</footer>
+
+</html>

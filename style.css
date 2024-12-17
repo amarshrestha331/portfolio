@@ -1,0 +1,684 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+}
+
+/* Navbar Styles */
+.navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 20px;
+    background: transparent;
+    color: black;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+    z-index: 1000;
+    height: 80px;
+}
+
+.navbar.scrolled {
+    background: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    padding-left: 60px
+}
+
+.logo .dot {
+    color: #32cf74;
+}
+
+html {
+scroll-behavior: smooth;
+}
+
+section {
+scroll-margin-top: 75px; /* Adjust this value for desired margin */
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 25px;
+    padding-right: 50px;
+
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: black;
+    font-size: 1rem;
+    font-weight: bold; /* Menu items are bold */
+    transition: color 0.3s ease, background 0.3s ease;
+    border-radius: 20px;
+    padding: 10px 25px; /* Increase padding for height and width */
+    
+}
+
+.nav-links a:hover {
+    background-color: #32cf74;
+    color: white;
+}
+
+.nav-links a.active {
+    background-color: #32cf74;
+    color: white;
+}
+
+/* Style for Scroll to Top Button */
+#scroll-to-top {
+position: fixed;
+bottom: 20px; /* Distance from bottom */
+right: 20px; /* Distance from right */
+background-color: #8ee0b0; /* Background color */
+color: white; /* Text color */
+border: none;
+border-radius: 0; /* square shape */
+padding: 15px;
+font-size: 1.5rem;
+cursor: pointer;
+display: none; /* Initially hidden */
+transition: opacity 0.3s ease;
+z-index: 9999;
+}
+
+#scroll-to-top:hover {
+background-color: #32cf74; /* Darker yellow on hover */
+}
+
+/* Make it visible when scrolling down */
+#scroll-to-top.visible {
+display: block;
+}
+
+
+.home-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 130px;
+    height: 630px;
+    background-color: #efffef; /* Changed to lightgreen for home section */
+    margin-left: -70px;
+
+}
+
+.home-content {
+    display: flex;
+    align-items: center;
+    gap: 50px;
+    max-width: 1200px;
+    width: 100%;
+    height: 1200px
+}
+
+.home-image img {
+    border-radius: 10px;
+    max-width: 582px;
+    width: 100%;
+    height: auto;
+    padding-top: 50px;
+}
+
+.home-text {
+    max-width: 600px;
+    margin-left: -50px;
+}
+
+.home-text h1 {
+    font-size: 4rem;
+    color: #2b2b2b; /* Dark text color */
+}
+
+.home-text h1 span {
+    color: #32cf74; /* Yellow color for the name */
+}
+
+.home-text h2 {
+    font-size: 2rem;
+    color: #32cf74;
+    margin-bottom: 10px;
+}
+
+.home-text p {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #555;
+    margin-bottom: 20px;
+}
+
+.social-icons {
+display: flex;
+gap: 15px;
+}
+
+.social-icons a {
+text-decoration: none;
+background-color: #32cf74; /* Yellow circle background */
+color: white; /* White emoji color */
+padding: 15px; /* Adjusted padding for round shape */
+border-radius: 50%; /* Circular shape */
+font-size: 1.5rem; /* Adjust the size of the emoji */
+display: flex;
+align-items: center;
+justify-content: center;
+width: 50px; /* Set width for consistent circle size */
+height: 50px; /* Set height for consistent circle size */
+transition: transform 0.3s ease;
+}
+
+.social-icons a:hover {
+transform: scale(1.1); /* Hover effect */
+}
+
+#typing-effect {
+    font-size: 1.5rem;
+    line-height: 1.8;
+    color: #32cf74;
+    margin-bottom: 15px;
+}
+
+/* About Section Styles */
+#about {
+display: flex;
+align-items: center;
+justify-content: center;
+padding: 50px;
+height: 500px;
+background-color: #f9fff9; /* Background color for the About section */
+}
+
+.about-content {
+display: flex;
+align-items: center;
+justify-content: space-between;
+max-width: 1200px;
+width: 100%;
+gap: 50px;
+}
+
+.about-text {
+max-width: 600px;
+flex: 1;
+font-size: 1.2rem;
+color: #2b2b2b;
+}
+
+.about-text h1 {
+font-size: 2.5rem;
+margin-bottom: 20px;
+color: #32cf74;
+
+}
+
+.about-text p {
+line-height: 1.8;
+width: 500px;
+color: #555;
+font-weight: 600;
+font-size: 18px;
+}
+
+.about-image {
+flex: 1;
+display: flex;
+justify-content: flex-end;
+}
+
+.about-image img {
+border-radius: 10px;
+max-width: 100%;
+height: auto;
+width: 500px; /* Set a specific width for the image */
+padding-top: 70px;
+}
+
+#skill-language {
+display: flex;
+height: 500px;
+padding: 50px;
+background-color: #efffef; /* Background color for the About section */
+}
+
+.skill-text h1 {
+font-size: 2.5rem;
+margin-left: 300px;
+color: #32cf74;
+margin-bottom: 30px;
+
+}
+
+.main {
+    display: flex;
+    --s: 100px;  /* size  */
+    --m: 4px;    /* margin */
+    --f: calc(1.732 * var(--s) + 4 * var(--m)  - 1px);
+    margin-left: px;
+    margin-top: px;
+}
+
+.container {
+    font-size: 1; /*disable white space between inline block element */
+    width: 750px;
+}
+
+.container div {
+    width: var(--s);
+    margin: var(--m);
+    height: calc(var(--s)*1.1547); 
+    display: inline-block;
+    font-size: initial;
+    clip-path: polygon(0% 25%, 0% 75%, 50% 100%, 100% 75%, 100% 25%, 50% 0%);
+    background: #66e099;
+    margin-bottom: calc(var(--m) - var(--s)*0.2885); 
+}
+
+.container div:nth-child(odd) {
+    background: #66e099;
+}
+
+.container::before {
+    content: "";
+    width: calc(var(--s)/2 + var(--m));
+    float: left;
+    height: 120%;
+    shape-outside: repeating-linear-gradient(     
+                 #0000 0 calc(var(--f) - 3px),      
+                 #000  0 var(--f));
+}
+
+.container div:hover {
+background-color: #32cf74;
+}
+
+.vertical-center {
+margin: 0;
+position: absolute;
+top: 50%;
+}
+
+.language-container body {
+font-family: Arial, sans-serif;
+height: 100vh;
+margin: 0;
+background-color: #f9f9f9;
+}
+
+.language-container {
+text-align: center;
+margin-left: 80px;
+}
+
+.language-container h1 {
+color: #32cf74;
+font-size: 2.5rem;
+margin-bottom: 20px;
+}
+
+.language-button {
+display: block;
+width: 140px;
+margin: 10px auto;
+padding: 10px 20px;
+font-size: 16px;
+color: white;
+background-color: #66e099;
+border: none;
+border-radius: 20px;
+transition: background-color 0.3s ease;
+}
+
+.language-button:hover {
+background-color: #32cf74;
+}
+
+/* General Styles */
+.education-section {
+padding: 30px;
+background-color: #f9fff9; /* Light background */
+}
+
+.section-title {
+text-align: center;
+font-size: 2.5rem;
+margin-bottom: 50px;
+margin-top: 0px;
+color: #32cf74;
+}
+
+
+/* Timeline Styles */
+.education-timeline {
+display: flex;
+flex-direction: column;
+gap: 50px; /* Spacing between items */
+max-width: 800px;
+margin: 0 auto;
+position: relative;
+}
+
+/* Add vertical line */
+.education-timeline::before {
+content: "";
+position: absolute;
+top: 10;
+bottom: 0;
+left: 40px; /* Center line with the circles */
+width: 4px;
+height: 260px;
+background-color: #32cf74; /* Yellow line color */
+margin-bottom: 10px;
+}
+
+/* Education Item */
+.education-item {
+display: flex;
+align-items: center;
+gap: 20px;
+position: relative;
+}
+
+/* Circle Image Styling */
+.education-image {
+width: 80px;
+height: 80px;
+border-radius: 50%;
+background-color: #fff;
+border: 4px solid #32cf74; /* Yellow border */
+display: flex;
+align-items: center;
+justify-content: center;
+flex-shrink: 0;
+position: relative;
+z-index: 1; /* Ensure it appears above the line */
+overflow: hidden; /* Clip the image to the circle */
+}
+
+.education-image img {
+width: 100%;
+height: 100%;
+object-fit: cover; /* Ensure image fits properly */
+border-radius: 50%; /* Ensures the image stays circular */
+}
+
+/* Content Box */
+.education-content {
+background-color: #fff;
+border-left: 4px solid #32cf74; /* Yellow border on the left */
+padding: 10px 20px;
+border-radius: 4px;
+box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+flex-grow: 1;
+margin-left: 50px;
+}
+
+.education-content h2 {
+font-size: 1.2rem;
+color: #32cf74; /* Yellow text */
+margin-bottom: 5px;
+}
+
+.education-content p {
+font-size: 0.9rem;
+color: #333;
+margin: 2px 0;
+}
+
+/* General Reset */
+* {
+margin: 0;
+padding: 0;
+box-sizing: border-box;
+}
+
+body {
+font-family: 'Arial', sans-serif;
+}
+
+/* Work Experience Section */
+#experience {
+padding: 30px;
+background-color: #efffef;
+}
+
+.experience-container {
+max-width: 1200px;
+margin: 0 auto;
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+gap: 20px;
+}
+
+/* Experience Card Styles */
+.experience-card {
+display: flex;
+flex-direction: column;
+background-color: white;
+border: 1px solid #eee;
+border-radius: 8px;
+padding: 20px;
+margin-top: -20px;
+box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Header Section: Logo and Timeline */
+.experience-header {
+display: flex;
+justify-content: space-between;
+align-items: center;
+margin-bottom: 20px;
+font-size: 2.5rem;
+}
+
+.experience-logo img {
+height: auto;
+width: 150px;
+}
+
+.experience-timeline {
+text-align: right;
+}
+
+.timeline-date {
+font-size: 0.95rem;
+color: #32cf74;
+font-weight: bold;
+}
+
+/* Content Section */
+.experience-content h3 {
+font-size: 1.2rem;
+color: #1a1a1a;
+margin-bottom: 10px;
+}
+
+.experience-content h3 .highlight {
+color: #32cf74;
+font-weight: bold;
+}
+
+.experience-details {
+list-style-type: disc;
+color: #555;
+line-height: 1.8;
+font-size: 0.95rem;
+padding-left: 20px;
+}
+
+/* General Section Styling */
+.get-in-touch {
+display: flex;
+justify-content: space-between;
+height: 550px;
+align-items: center;
+padding: 40px;
+position: relative; /* Required for positioning the h2 in the center */
+}
+
+.get-in-touch h2 {
+position: absolute;
+top: 8%;
+left: 50%;
+margin-top: 15px;
+transform: translate(-50%, -50%);
+color: #32cf74;
+font-size: 2.5rem;
+font-weight: bold;
+z-index: 1;
+background-color: #f9fff9;
+padding: 20px; /* To avoid text overlapping with the divs */
+}
+
+/* Form Container Styling */
+.form-container {
+flex: 1;
+margin-right: 20px;
+max-width: 50%;
+margin-top: 50px;
+}
+
+.form-container form {
+display: flex;
+flex-direction: column;
+gap: 15px;
+}
+
+.form-group label {
+font-weight: bold;
+color: #333;
+margin-bottom: 5px;
+}
+
+.form-group input,
+.form-group textarea {
+width: 100%;
+padding: 10px;
+border: 1px solid #ddd;
+border-radius: 5px;
+font-size: 16px;
+}
+
+.form-group textarea {
+height: 100px;
+resize: none;
+}
+
+button {
+background-color: #32cf74;
+color: #ffffff;
+border: none;
+padding: 10px 15px;
+font-size: 16px;
+font-weight: bold;
+cursor: pointer;
+border-radius: 5px;
+transition: background-color 0.3s ease;
+}
+
+button:hover {
+background-color: #1c9b51;
+}
+
+/* Contact Image Styling */
+.contact-image {
+flex: 1;
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
+}
+
+.contact-image img {
+width: 200px;
+height: auto;
+object-fit: contain;
+margin-bottom: 0px;
+margin-top: 45px;
+cursor: pointer;
+transition: transform 0.3s ease;
+}
+
+.contact-image img:hover {
+transform: scale(1.1);
+}
+
+.contact-image p {
+text-align: center;
+font-size: 18px;
+font-weight: bold;
+color: #333;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+.get-in-touch {
+flex-direction: column;
+align-items: flex-start;
+}
+
+.form-container {
+max-width: 100%;
+margin-right: 0;
+margin-bottom: 20px;
+}
+
+.contact-image {
+width: 100%;
+align-items: flex-start;
+}
+
+.contact-image p {
+text-align: left;
+}
+}
+
+
+footer {
+background-color: #32cf74; /* Dark background for the footer */
+color: #32cf74;
+padding: 10px;
+text-align: center;
+}
+
+.footer-content {
+display: flex;
+justify-content: space-between; /* Distribute content between left and center */
+align-items: center;
+padding: 0 20px;
+}
+
+.footer-message {
+font-size: 1rem;
+color: #ffffff; /* White color for the message */
+text-align: center;
+flex-grow: 1; /* Ensures the message stays in the center */
+margin-left: -300px; /* Center adjust manually (update this if needed) */
+}
+
+/* Footer-specific social icons */
+.footer-social-icons a {
+color: white; /* Icon color */
+font-size: 1.5rem; /* Adjust size as needed */
+text-decoration: none; /* Remove underline */
+background-color: transparent; /* No background */
+border-radius: 0; /* Remove circular shape */
+padding: 0; /* No padding around icons */
+margin: 0 10px; /* Space between icons */
+transition: transform 0.3s ease; /* Hover effect */
+}
+
+.footer-social-icons a:hover {
+transform: scale(1.1); /* Slightly enlarge on hover */
+}
