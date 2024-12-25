@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="icon" href="fav-icon.png" type="image/x-icon">
+    <link rel="icon" href="C:\Users\uSer\Downloads\portfolio\image\fav-icon.png" type="image/x-icon">
     <link rel="stylesheet" href="style.css">
     <title>Amar Shrestha | QA</title>
 
@@ -49,7 +49,7 @@
         <div class="home-content">
             <!-- Profile Image -->
             <div class="home-image">
-                <img src="Home-img.png" alt="Profile Image">
+                <img src="C:\Users\uSer\Documents\portfolio\image\Home-img.png" alt="Profile Image">
             </div>
     
             <!-- Text Content -->
@@ -77,7 +77,7 @@
             
             <!-- Profile Image -->
             <div class="about-image">
-                <img src="about-img.png" alt="Profile Image">
+                <img src="C:\Users\uSer\Documents\portfolio\image\about-img.png" alt="Profile Image">
             </div>
         </div>
     </section>
@@ -126,10 +126,10 @@
             <!-- Education Item 1 -->
             <div class="education-item">
                 <div class="education-image">
-                    <img src="sxc-img.png" alt="Education Image 1">
+                    <img src="C:\Users\uSer\Documents\portfolio\image\sxc-img.png" alt="Education Image 1">
                 </div>
                 <div class="education-content">
-                    <h2>Bachelors of Information Management</h2>
+                    <h2>Bachelors in Information Management</h2>
                     <p>St. Xavier’s College, Maitighar, Kathmandu, Nepal</p>
                     <p>2019-2024</p>
                 </div>
@@ -138,7 +138,7 @@
             <!-- Education Item 2 -->
             <div class="education-item">
                 <div class="education-image">
-                    <img src="gcm-img.png" alt="Education Image 2">
+                    <img src="C:\Users\uSer\Documents\portfolio\image\gcm-img.png" alt="Education Image 2">
                 </div>
                 <div class="education-content">
                     <h2>High School</h2>
@@ -150,7 +150,7 @@
             <!-- Education Item 3 -->
             <div class="education-item">
                 <div class="education-image">
-                    <img src="paragon-img.png" alt="Education Image 3">
+                    <img src="C:\Users\uSer\Documents\portfolio\image\paragon-img.png" alt="Education Image 3">
                 </div>
                 <div class="education-content">
                     <h2>Secondary Education Examination</h2>
@@ -169,7 +169,7 @@
                 <div class="experience-header">
                     <div class="experience-logo">
                         <a href="https://www.searchabledesign.com/index.html" target="_blank">
-                        <img src="SD-Logo-img.png" alt="Company Logo">
+                        <img src="C:\Users\uSer\Documents\portfolio\image\SD-Logo-img.png" alt="Company Logo">
                         </a>
                     </div>
                     <div class="experience-timeline">
@@ -194,7 +194,7 @@
                 <div class="experience-header">
                     <div class="experience-logo">
                         <a href="https://www.searchabledesign.com/index.html" target="_blank">
-                        <img src="SD-Logo-img.png" alt="Company Logo">
+                        <img src="C:\Users\uSer\Documents\portfolio\image\SD-Logo-img.png" alt="Company Logo">
                         </a>
                     </div>
                     <div class="experience-timeline">
@@ -244,63 +244,36 @@
         </form>
         </div>
 
- <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
         <script>
-          // Initialize EmailJS
-          emailjs.init('rrl3FMof6VbPbOuiQ'); // Replace with your EmailJS User ID
-      
-          document.getElementById("sendEmailButton").addEventListener("click", function () {
-            const name = document.getElementById("name").value;
-            const email = document.getElementById("email").value;
-            const subject = document.getElementById("subject").value;
-            const message = document.getElementById("message").value;
-      
-            if (!name || !email || !subject || !message) {
-              alert("Please fill out all fields before sending.");
-              return;
-            }
-      
-            // Prepare EmailJS template parameters
-            const templateParams = {
-              name: name,
-              email: email,
-              subject: subject,
-              message: message,
-            };
-      
-            // Send the email using EmailJS
-            emailjs
-              .send("service_1b4at4n", "template_bnoclhd", templateParams) // Replace with your Service ID and Template ID
-              .then(
-                function (response) {
-                    alert("Email successfully sent!");
-                    console.log("Success:", response);
-                },
-                function (error) {
-                    alert("Failed to send email: " + error.text);
-                    console.error("Error:", error);
-                    handleError(error);
-                }
-              );
-          });
-          function handleError(error) {
-            // Handle different error types (e.g., validation errors)
-            if (error.text.includes("Forbidden")) {
-                alert("There seems to be an issue with your EmailJS setup. Please check your API keys or service configuration.");
-            } else if (error.text.includes("timeout")) {
-                alert("Request timed out. Please check your internet connection and try again.");
-            } else {
-                alert("Unexpected error occurred: " + error.text);
-            }
-            }
-        </script>
-        
+            document.getElementById("sendEmailButton").addEventListener("click", function () {
+              const name = document.getElementById("name").value;
+              const email = document.getElementById("email").value;
+              const subject = document.getElementById("subject").value;
+              const message = document.getElementById("message").value;
+          
+              if (!name || !email || !subject || !message) {
+                alert("Please fill out all fields before sending.");
+                return;
+              }
+          
+              Email.send({
+                Host: "smtp.gmail.com", // Replace with your SMTP server
+                Username: "amarshrestha332@gmail.com",   // Replace with your SMTP username
+                Password: "fzcxruhnxscdkbdo",            // Replace with your SMTP password
+                To: "amarshrestha331@gmail.com",    // Replace with the recipient's email
+                From: email,
+                Subject: subject,
+                Body: `Name: ${name}<br>Email: ${email}<br>Message:<br>${message}`,
+              }).then((message) => alert("Email successfully sent!"))
+                .catch((error) => alert("Failed to send email: " + error.message));
+            });
+          </script>
           
           
       
         <div class="contact-image">
           <a href="tel:+977-9818740778">
-            <img src="phone-img.png" alt="Contact Image" />
+            <img src="C:\Users\uSer\Documents\portfolio\image\phone-img.png" alt="Contact Image" />
           </a>
         </div>
       </section>
