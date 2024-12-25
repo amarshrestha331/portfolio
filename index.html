@@ -252,30 +252,57 @@
         </form>
         </div>
 
+ <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
         <script>
-            document.getElementById("sendEmailButton").addEventListener("click", function () {
-              const name = document.getElementById("name").value;
-              const email = document.getElementById("email").value;
-              const subject = document.getElementById("subject").value;
-              const message = document.getElementById("message").value;
-          
-              if (!name || !email || !subject || !message) {
-                alert("Please fill out all fields before sending.");
-                return;
-              }
-          
-              Email.send({
-                Host: "smtp.gmail.com", // Replace with your SMTP server
-                Username: "amarshrestha332@gmail.com",   // Replace with your SMTP username
-                Password: "fzcxruhnxscdkbdo",            // Replace with your SMTP password
-                To: "amarshrestha331@gmail.com",    // Replace with the recipient's email
-                From: email,
-                Subject: subject,
-                Body: `Name: ${name}<br>Email: ${email}<br>Message:<br>${message}`,
-              }).then((message) => alert("Email successfully sent!"))
-                .catch((error) => alert("Failed to send email: " + error.message));
-            });
-          </script>
+          // Initialize EmailJS
+          emailjs.init('rrl3FMof6VbPbOuiQ'); // Replace with your EmailJS User ID
+      
+          document.getElementById("sendEmailButton").addEventListener("click", function () {
+            const name = document.getElementById("name").value;
+            const email = document.getElementById("email").value;
+            const subject = document.getElementById("subject").value;
+            const message = document.getElementById("message").value;
+      
+            if (!name || !email || !subject || !message) {
+              alert("Please fill out all fields before sending.");
+              return;
+            }
+      
+            // Prepare EmailJS template parameters
+            const templateParams = {
+              name: name,
+              email: email,
+              subject: subject,
+              message: message,
+            };
+      
+            // Send the email using EmailJS
+            emailjs
+              .send("service_1b4at4n", "template_bnoclhd", templateParams) // Replace with your Service ID and Template ID
+              .then(
+                function (response) {
+                    alert("Email successfully sent!");
+                    console.log("Success:", response);
+                },
+                function (error) {
+                    alert("Failed to send email: " + error.text);
+                    console.error("Error:", error);
+                    handleError(error);
+                }
+              );
+          });
+          function handleError(error) {
+            // Handle different error types (e.g., validation errors)
+            if (error.text.includes("Forbidden")) {
+                alert("There seems to be an issue with your EmailJS setup. Please check your API keys or service configuration.");
+            } else if (error.text.includes("timeout")) {
+                alert("Request timed out. Please check your internet connection and try again.");
+            } else {
+                alert("Unexpected error occurred: " + error.text);
+            }
+            }
+        </script>
+        
           
           
       
