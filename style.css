@@ -1,13 +1,6 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
 body {
-    font-family: 'Arial', sans-serif;
-}
-
+    overflow-x: hidden;
+  }
 /* Navbar Styles */
 .navbar {
     position: fixed;
@@ -94,6 +87,10 @@ scroll-margin-top: 75px; /* Adjust this value for desired margin */
 
 /* Mobile styles */
 @media (max-width: 768px) {
+
+    .navbar {
+        width: 100%;
+    }
     .navbar ul {
         display: none;
         flex-direction: column;
@@ -240,11 +237,14 @@ transform: scale(1.1); /* Hover effect */
     margin-bottom: 15px;
 }
 
+
+
 /* Mobile-Specific Styles */
 @media screen and (max-width: 768px) {
     .home-section {
         flex-direction: column;
         height: auto; /* Adjust height for mobile */
+        position: relative;
     }
 
     .home-content {
@@ -283,11 +283,15 @@ transform: scale(1.1); /* Hover effect */
         background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white */
         padding: 20px;
         position: absolute;
-        bottom: 0; /* Ensures it is aligned to the bottom */
         z-index: 2;
-        width: 100%;
-        margin-bottom: -22px;
+        width: 100vw; /* Full width */
+        bottom: 0; /* Align to the bottom of the parent section */
+        left: 0; /* Ensure alignment starts from the left */
+        margin: 0; /* Remove unwanted margin */
+        box-sizing: border-box; /* Ensure padding doesn't affect the total size */
     }
+    
+    
 
     .home-text {
         max-width: 100%;
