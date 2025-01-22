@@ -35,6 +35,11 @@
 
     <nav class="navbar" id="navbar">
         <div class="logo">Amar Shrestha<span class="dot">.</span></div>
+        <div class="hamburger">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
         <ul class="nav-links">
             <li><a href="#home">Home</a></li> <!-- Home button added -->
             <li><a href="#about">About Me</a></li>
@@ -53,6 +58,7 @@
             </div>
     
             <!-- Text Content -->
+     <div class="white-box">
             <div class="home-text">
                 <h2>Hi There, I'm</h2>
                 <h1>Amar Shrestha</h1>
@@ -65,6 +71,7 @@
                     <a href="mailto:amarshrestha331@gmail.com" target="_blank"><i class="fa fa-envelope"></i></a>
             </div>
         </div>
+    </div>
     </section>
 
     <section id="about">
@@ -82,11 +89,11 @@
         </div>
     </section>
 
-    <section id="skill-language">
-        <div class="skill-language-content-1">
+    <section id="skill">
+        <div class="skill-content">
             <!-- Text Content -->
             <div class="skill-text">
-                <h1>Skill</h1>
+                <h1>Skills</h1>
             </div>
             <div class="skill-set">
                 <div class="skill">Quality Assurance (QA)</div>
@@ -95,28 +102,29 @@
                 <div class="skill">Stress Testing</div>
                 <div class="skill">Test Planning</div>
                 <div class="skill">Test Cases</div>
+                <div class="skill">API Testing</div>
+                <div class="skill">HTML</div>
+                <div class="skill">CSS</div>
+                <div class="skill">Insurtech</div>
+                <div class="skill">Jira</div>
                 <div class="skill">HubSpot</div>
                 <div class="skill">Google Analytics</div>
-                <div class="skill">API Testing</div>
                 <div class="skill">Banner Designing</div>
                 <div class="skill">SEO</div>
                 <div class="skill">SEM</div>
                 <div class="skill">Figma</div>
-                <div class="skill">HTML / CSS</div>
-                <div class="skill">Insurtech</div>
-                <div class="skill">Jira</div>
                 <div class="skill">Microsoft Office</div>
             </div>
         </div>    
+    </section>
 
-        <div class="skill-language-content-2">
-            <div class="language-container">
-                <h1>Languages</h1>
-                <button class="language-button">English</button>
-                <button class="language-button">Nepali</button>
-                <button class="language-button">Nepal Bhasa</button>
-                <button class="language-button">Hindi</button>
-            </div>
+    <section class="languages-section">
+        <h1 class="title">Languages</h1>
+        <div class="language-buttons">
+            <button class="language">English</button>
+            <button class="language">Nepali</button>
+            <button class="language">Nepal Bhasa</button>
+            <button class="language">Hindi</button>
         </div>
     </section>
 
@@ -129,7 +137,7 @@
                     <img src="sxc-img.png" alt="Education Image 1">
                 </div>
                 <div class="education-content">
-                    <h2>Bachelors in Information Management</h2>
+                    <h2>Bachelors of Information Management</h2>
                     <p>St. Xavier’s College, Maitighar, Kathmandu, Nepal</p>
                     <p>2019-2024</p>
                 </div>
@@ -162,7 +170,7 @@
     </section>
     
     <section id="experience">
-        <h1 class="section-title">Experience</h1>
+        <h1 class="section-title-experience">Experience</h1>
         <div class="experience-container">
             <!-- Experience Card 1 -->
             <div class="experience-card">
@@ -217,68 +225,53 @@
     </section>
     
     <section class="get-in-touch" id="get-in-touch">
-        <div class="form-container">
-          <h2>Get in Touch</h2>
-
-          <script src="https://smtpjs.com/v3/smtp.js"></script>
-
-
-          <form action="#" method="post">
-            <div class="form-group">
-              <label for="name">Name</label>
-              <input type="text" id="name" name="name" placeholder="Enter your name" required>
+        <h1 class="title-contact">Get in Touch</h1>
+    
+        <div class="contact-section">
+            <div class="form-container">
+                <script src="https://smtpjs.com/v3/smtp.js"></script>
+    
+                <form action="#" method="post">
+                    <div class="form-group">
+                        <label for="name">Name</label>
+                        <input type="text" id="name" name="name" placeholder="Enter your name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="subject">Subject</label>
+                        <input type="text" id="subject" name="subject" placeholder="Enter the subject" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message</label>
+                        <textarea id="message" name="message" placeholder="Write your message" required></textarea>
+                    </div>
+                    <button id="sendEmailButton" type="button">Send Message</button>
+                </form>
             </div>
-            <div class="form-group">
-              <label for="email">Email</label>
-              <input type="email" id="email" name="email" placeholder="Enter your email" required>
+    
+            <div class="contact-image">
+                <a href="tel:+977-9818740778">
+                    <img src="phone-img.png" alt="Contact Image" />
+                </a>
             </div>
-            <div class="form-group">
-              <label for="subject">Subject</label>
-              <input type="text" id="subject" name="subject" placeholder="Enter the subject" required>
-            </div>
-            <div class="form-group">
-              <label for="message">Message</label>
-              <textarea id="message" name="message" placeholder="Write your message" required></textarea>
-            </div>
-            <button id="sendEmailButton" type="button">Send Message</button>
-        </form>
         </div>
-
-        <script>
-            document.getElementById("sendEmailButton").addEventListener("click", function () {
-              const name = document.getElementById("name").value;
-              const email = document.getElementById("email").value;
-              const subject = document.getElementById("subject").value;
-              const message = document.getElementById("message").value;
-          
-              if (!name || !email || !subject || !message) {
-                alert("Please fill out all fields before sending.");
-                return;
-              }
-          
-              Email.send({
-                Host: "smtp.gmail.com", // Replace with your SMTP server
-                Username: "amarshrestha332@gmail.com",   // Replace with your SMTP username
-                Password: "fzcxruhnxscdkbdo",            // Replace with your SMTP password
-                To: "amarshrestha331@gmail.com",    // Replace with the recipient's email
-                From: email,
-                Subject: subject,
-                Body: `Name: ${name}<br>Email: ${email}<br>Message:<br>${message}`,
-              }).then((message) => alert("Email successfully sent!"))
-                .catch((error) => alert("Failed to send email: " + error.message));
-            });
-          </script>
-          
-          
-      
-        <div class="contact-image">
-          <a href="tel:+977-9818740778">
-            <img src="phone-img.png" alt="Contact Image" />
-          </a>
-        </div>
-      </section>
+    </section>
+    
       
     <script>
+
+document.addEventListener("DOMContentLoaded", function () {
+    const hamburger = document.querySelector(".hamburger");
+    const navLinks = document.querySelector(".nav-links");
+
+    hamburger.addEventListener("click", function () {
+        navLinks.classList.toggle("show");
+    });
+});
+
         // Change navbar style on scroll
         const navbar = document.getElementById('navbar');
 
@@ -304,19 +297,43 @@
 
         // Start the typing effect
         typeEffect();
-    </script>
-</body>
-<footer>
-    <div class="footer-content">
-        <div class="footer-social-icons">
-            <a href="https://www.linkedin.com/in/amar-shrestha-a7b2b8247/" target="_blank"><i class="fab fa-linkedin"></i></a>
-            <a href="https://www.facebook.com/xrestha.amar" target="_blank"><i class="fab fa-facebook"></i></a>
-            <a href="https://www.instagram.com/amar__shrestha/" target="_blank"><i class="fab fa-instagram"></i></a>
-            <a href="https://telegram.me/AMS331" target="_blank"><i class="fab fa-telegram-plane"></i></a>
-            <a href="mailto:amarshrestha331@gmail.com" target="_blank"><i class="fa fa-envelope"></i></a>
-        </div>
-        <p class="footer-message">Crafted with love</p>
-    </div>
-</footer>
 
+        document.getElementById("sendEmailButton").addEventListener("click", function () {
+              const name = document.getElementById("name").value;
+              const email = document.getElementById("email").value;
+              const subject = document.getElementById("subject").value;
+              const message = document.getElementById("message").value;
+          
+              if (!name || !email || !subject || !message) {
+                alert("Please fill out all fields before sending.");
+                return;
+              }
+          
+              Email.send({
+                Host: "smtp.gmail.com", // Replace with your SMTP server
+                Username: "amarshrestha332@gmail.com",   // Replace with your SMTP username
+                Password: "fzcxruhnxscdkbdo",            // Replace with your SMTP password
+                To: "amarshrestha331@gmail.com",    // Replace with the recipient's email
+                From: email,
+                Subject: subject,
+                Body: `Name: ${name}<br>Email: ${email}<br>Message:<br>${message}`,
+              }).then((message) => alert("Email successfully sent!"))
+                .catch((error) => alert("Failed to send email: " + error.message));
+            });
+    </script>
+
+<footer>
+    <footer>
+        <div class="footer-left">
+            <a href="https://www.linkedin.com/in/amar-shrestha-a7b2b8247/" target="_blank"><i class="fab fa-linkedin social-icon-footer"></i></a>
+            <a href="https://www.facebook.com/xrestha.amar" target="_blank"><i class="fab fa-facebook social-icon-footer"></i></a>
+            <a href="https://www.instagram.com/amar__shrestha/" target="_blank"><i class="fab fa-instagram social-icon-footer"></i></a>
+            <a href="https://telegram.me/AMS331" target="_blank"><i class="fab fa-telegram-plane social-icon-footer"></i></a>
+            <a href="mailto:amarshrestha331@gmail.com" target="_blank"><i class="fa fa-envelope social-icon-footer"></i></a>
+        </div>
+        <div class="footer-center">
+            Crafted with love
+        </div>
+    </footer>
+</body>
 </html>
