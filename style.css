@@ -1,6 +1,8 @@
-body {
-    overflow-x: hidden;
-  }
+body, html {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden; /* Prevent horizontal scrolling */
+}
 /* Navbar Styles */
 .navbar {
     position: fixed;
