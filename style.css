@@ -520,6 +520,12 @@ align-items: center;
     }
 
     @media (max-width: 768px) {
+
+    #skill {
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+
     .skill-text h1 {
         font-size: 1.5rem;
         }
@@ -633,9 +639,13 @@ margin: 2px 0;
 
 @media (max-width: 768px) {
     .education-timeline::before {
-        left: 49%;
-        height:95%;
+        content: ''; /* Add this to ensure the pseudo-element is created */
+        position: absolute;
+        left: 50%; /* Centers it horizontally */
+        transform: translateX(-50%); /* Adjusts the element to perfectly center */
+        height: 95%;
     }
+
     .education-item {
         flex-direction: column;
         align-items: flex-start;
@@ -644,7 +654,9 @@ margin: 2px 0;
     .education-image {
         width: 80px;
         height: 80px;
- margin-left: 40%;
+        margin-left: auto;
+        margin-right: auto;
+        display: block; /* Ensure it's treated as a block element */
     }
     .education-content {
         margin-left: 0;
@@ -755,24 +767,62 @@ padding-left: 20px;
 }
 
 /* Responsive Design for Mobile */
-@media (max-width: 768px) {
-    .experience-container {
-        gap: 40px;
-        }
 
-        .section-title-experience {
-            font-size: 1.5rem;
-            margin-top: 20px;
-            padding-bottom: 10px;
-            }
-
-            .experience-content h3 {
-                font-size: 1rem;
-                }
-                .experience-details {
-                    font-size: 0.7rem;
-                    }        
-}
+                    @media (max-width: 768px) {
+                        /* Experience Section */
+                        #experience {
+                            padding: 20px;
+                        }
+                    
+                        .section-title-experience {
+                            font-size: 1.5rem;
+                            margin-top: 20px;
+                            margin-bottom: 30px;
+                        }
+                    
+                        /* Experience Card Styles */
+                        .experience-container {
+                            display: block; /* Stack the experience cards vertically */
+                            margin: 0 auto;
+                            max-width: 100%;
+                        }
+                    
+                        .experience-card {
+                            padding: 15px;
+                            margin-top: 20px;
+                            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                            max-width: 100%;
+                        }
+                    
+                        /* Header Section */
+                        .experience-header {
+                            font-size: 1.5rem; /* Adjust font size */
+                            margin-bottom: 15px;
+                        }
+                    
+                        .experience-logo img {
+                            width: 120px; /* Resize the logo for smaller screens */
+                        }
+                    
+                        /* Timeline Section */
+                        .experience-timeline {
+                            text-align: left;
+                        }
+                    
+                        .timeline-date {
+                            font-size: 0.85rem; /* Adjust date font size */
+                        }
+                    
+                        /* Content Section */
+                        .experience-content h3 {
+                            font-size: 1rem; /* Adjust content title font size */
+                        }
+                    
+                        .experience-details {
+                            font-size: 0.85rem; /* Adjust font size of the details */
+                        }
+                    }
+                    
 
 /* General Section Styling */
 .get-in-touch {
@@ -932,7 +982,7 @@ button:hover {
     /* Form Styling */
     .form-container form {
         gap: 10px; /* Reduced gap for smaller screens */
-        max-width: 90%;
+        max-width: 80%;
 
     }
 
