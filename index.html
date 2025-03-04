@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="icon" href="fav-icon.png" type="image/x-icon">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="styles.css">
     <title>Amar Shrestha | QA Engineer</title>
     <meta name="description" content="QA Engineer delivering seamless software experiences with expert testing and quality control." />
 
@@ -346,24 +346,29 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
             <div class="form-container">
                 
     
-                <form>
+                <form id="contactForm">
                     <div class="form-group">
-                        <label for="name">Name</label>
-                        <input type="text" id="name" name="name" placeholder="Enter your name" required>
+                        <label for="name">Name:</label>
+        <input type="text" id="name" name="name">
+        <span class="error" id="name-error"></span>
                     </div>
                     <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                        <label for="email">Email:</label>
+                        <input type="text" id="email" name="email">
+                        <span class="error" id="email-error"></span>
                     </div>
                     <div class="form-group">
-                        <label for="subject">Subject</label>
-                        <input type="text" id="subject" name="subject" placeholder="Enter the subject" required>
+                        <label for="subject">Subject:</label>
+        <input type="text" id="subject" name="subject">
+        <span class="error" id="subject-error"></span>
                     </div>
                     <div class="form-group">
-                        <label for="message">Message</label>
-                        <textarea id="message" name="message" placeholder="Write your message" required></textarea>
+                        <label for="message">Message:</label>
+        <textarea id="message" name="message"></textarea>
+        <span class="error" id="message-error"></span>
+
                     </div>
-                    <button id="sendEmailButton" type="button">Send Message</button>
+                    <button id="sendEmailButton" type="submit">Send Message</button>
                 </form>
             </div>
     
@@ -413,38 +418,155 @@ document.addEventListener("DOMContentLoaded", function () {
         // Start the typing effect
         typeEffect();
 
-     document.addEventListener("DOMContentLoaded", function () {
-     emailjs.init("72eRuTrXtfJSWBH58"); 
+        document.addEventListener("DOMContentLoaded", function () {
+            emailjs.init("72eRuTrXtfJSWBH58");
 
-    document.getElementById("sendEmailButton").addEventListener("click", function () {
-        const name = document.getElementById("name").value;
-        const email = document.getElementById("email").value;
-        const message = document.getElementById("message").value;
-        const subject = document.getElementById("subject").value;
+            const contactForm = document.getElementById("contactForm");
+            const nameInput = document.getElementById("name");
+            const emailInput = document.getElementById("email");
+            const subjectInput = document.getElementById("subject");
+            const messageInput = document.getElementById("message");
 
-        if (!name || !email || !message) {
-            alert("Please fill out all fields before sending.");
-            return;
-        }
-        emailjs.send("service_2gizvbn", "template_urmg4lr", {
-            to_name: "Amar Shrestha",
-            from_name: name,
-            from_email: email,
-            subject: subject,
-            message: message,
-        })
-        .then(() => {
-            alert("Email successfully sent!");
-            document.getElementById("name").value = "";
-            document.getElementById("email").value = "";
-            document.getElementById("subject").value = "";
-            document.getElementById("message").value = "";
-        })
-        .catch((error) => {
-            alert("Failed to send email: " + error.text);
+            const nameError = document.getElementById("name-error");
+            const emailError = document.getElementById("email-error");
+            const subjectError = document.getElementById("subject-error");
+            const messageError = document.getElementById("message-error");
+
+            // Validation functions
+            function validateName() {
+                if (nameInput.value.trim() === "") {
+                    nameError.textContent = "Name is required.";
+                    nameInput.classList.add("invalid");
+                    return false;
+                } else {
+                    nameError.textContent = "";
+                    nameInput.classList.remove("invalid");
+                    return true;
+                }
+            }
+
+            function validateEmail() {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (emailInput.value.trim() === "") {
+                    emailError.textContent = "Email is required.";
+                    emailInput.classList.add("invalid");
+                    return false;
+                } else if (!emailRegex.test(emailInput.value.trim())) {
+                    emailError.textContent = "Invalid email format.";
+                    emailInput.classList.add("invalid");
+                    return false;
+                } else {
+                    emailError.textContent = "";
+                    emailInput.classList.remove("invalid");
+                    return true;
+                }
+            }
+
+            function validateSubject() {
+                if (subjectInput.value.trim() === "") {
+                    subjectError.textContent = "Subject is required.";
+                    subjectInput.classList.add("invalid");
+                    return false;
+                } else {
+                    subjectError.textContent = "";
+                    subjectInput.classList.remove("invalid");
+                    return true;
+                }
+            }
+
+            function validateMessage() {
+                if (messageInput.value.trim() === "") {
+                    messageError.textContent = "Message is required.";
+                    messageInput.classList.add("invalid");
+                    return false;
+                } else {
+                    messageError.textContent = "";
+                    messageInput.classList.remove("invalid");
+                    return true;
+                }
+            }
+
+            // Add validation on blur (when user clicks out of the field)
+            nameInput.addEventListener("blur", validateName);
+            emailInput.addEventListener("blur", validateEmail);
+            subjectInput.addEventListener("blur", validateSubject);
+            messageInput.addEventListener("blur", validateMessage);
+
+            // Add validation on focus (when user clicks into the field)
+            nameInput.addEventListener("focus", function() {
+                if (nameInput.value.trim() === "") {
+                    nameError.textContent = "Name is required.";
+                    nameInput.classList.add("invalid");
+                }
+            });
+            
+            emailInput.addEventListener("focus", function() {
+                if (emailInput.value.trim() === "") {
+                    emailError.textContent = "Email is required.";
+                    emailInput.classList.add("invalid");
+                }
+            });
+            
+            subjectInput.addEventListener("focus", function() {
+                if (subjectInput.value.trim() === "") {
+                    subjectError.textContent = "Subject is required.";
+                    subjectInput.classList.add("invalid");
+                }
+            });
+            
+            messageInput.addEventListener("focus", function() {
+                if (messageInput.value.trim() === "") {
+                    messageError.textContent = "Message is required.";
+                    messageInput.classList.add("invalid");
+                }
+            });
+
+            // Clear errors as user types
+            nameInput.addEventListener("input", validateName);
+            emailInput.addEventListener("input", validateEmail);
+            subjectInput.addEventListener("input", validateSubject);
+            messageInput.addEventListener("input", validateMessage);
+
+            // Form submission
+            contactForm.addEventListener("submit", function(event) {
+                event.preventDefault();
+                
+                // Validate all fields
+                const isNameValid = validateName();
+                const isEmailValid = validateEmail();
+                const isSubjectValid = validateSubject();
+                const isMessageValid = validateMessage();
+                
+                // Only send email if all validations pass
+                if (isNameValid && isEmailValid && isSubjectValid && isMessageValid) {
+                    emailjs.send("service_2gizvbn", "template_urmg4lr", {
+                        to_name: "Amar Shrestha",
+                        from_name: nameInput.value,
+                        from_email: emailInput.value,
+                        subject: subjectInput.value,
+                        message: messageInput.value,
+                    })
+                    .then(() => {
+                        alert("Email successfully sent!");
+                        contactForm.reset();
+                        // Clear all error messages after successful submission
+                        nameError.textContent = "";
+                        emailError.textContent = "";
+                        subjectError.textContent = "";
+                        messageError.textContent = "";
+                    })
+                    .catch((error) => {
+                        alert("Failed to send email: " + error.text);
+                    });
+                } else {
+                    // If validation fails, show all error messages
+                    validateName();
+                    validateEmail();
+                    validateSubject();
+                    validateMessage();
+                }
+            });
         });
-    });
-});
     </script>
 
 <footer>
