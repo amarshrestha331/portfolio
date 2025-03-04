@@ -870,7 +870,7 @@ body {
 .error {
   color: red;
   font-size: 14px;
-  margin-top: 5px;
+  margin-top: 10px;
 }
 
 /* Align label to the left */
