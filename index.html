@@ -9,7 +9,7 @@
     <title>Amar Shrestha | QA Engineer</title>
     <meta name="description" content="QA Engineer delivering seamless software experiences with expert testing and quality control." />
 
-
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <!-- Google Tag Manager -->
 <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
 new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -344,9 +344,9 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     
         <div class="contact-section">
             <div class="form-container">
-                <script src="https://smtpjs.com/v3/smtp.js"></script>
+                
     
-                <form action="#" method="post">
+                <form>
                     <div class="form-group">
                         <label for="name">Name</label>
                         <input type="text" id="name" name="name" placeholder="Enter your name" required>
@@ -413,28 +413,37 @@ document.addEventListener("DOMContentLoaded", function () {
         // Start the typing effect
         typeEffect();
 
-        document.getElementById("sendEmailButton").addEventListener("click", function () {
-              const name = document.getElementById("name").value;
-              const email = document.getElementById("email").value;
-              const subject = document.getElementById("subject").value;
-              const message = document.getElementById("message").value;
-          
-              if (!name || !email || !subject || !message) {
-                alert("Please fill out all fields before sending.");
-                return;
-              }
-          
-              Email.send({
-                Host: "smtp.gmail.com", // Replace with your SMTP server
-                Username: "amarshrestha332@gmail.com",   // Replace with your SMTP username
-                Password: "fzcxruhnxscdkbdo",            // Replace with your SMTP password
-                To: "amarshrestha331@gmail.com",    // Replace with the recipient's email
-                From: email,
-                Subject: subject,
-                Body: `Name: ${name}<br>Email: ${email}<br>Message:<br>${message}`,
-              }).then((message) => alert("Email successfully sent!"))
-                .catch((error) => alert("Failed to send email: " + error.message));
-            });
+     document.addEventListener("DOMContentLoaded", function () {
+     emailjs.init("72eRuTrXtfJSWBH58"); 
+
+    document.getElementById("sendEmailButton").addEventListener("click", function () {
+        const name = document.getElementById("name").value;
+        const email = document.getElementById("email").value;
+        const message = document.getElementById("message").value;
+        const subject = document.getElementById("subject").value;
+
+        if (!name || !email || !message) {
+            alert("Please fill out all fields before sending.");
+            return;
+        }
+        emailjs.send("service_2gizvbn", "template_urmg4lr", {
+            to_name: "Amar Shrestha",
+            from_name: name,
+            from_email: email,
+            subject: subject,
+            message: message,
+        })
+        .then(() => {
+            alert("Email successfully sent!");
+            document.getElementById("name").value = "";
+            document.getElementById("email").value = "";
+            document.getElementById("message").value = "";
+        })
+        .catch((error) => {
+            alert("Failed to send email: " + error.text);
+        });
+    });
+});
     </script>
 
 <footer>
