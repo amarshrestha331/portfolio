@@ -139,7 +139,7 @@ padding: 15px;
 font-size: 1.5rem;
 cursor: pointer;
 display: none; /* Initially hidden */
-transition: opacity 0.3s ease;
+transition: opacity 0.3s ease, bottom 0.2s ease;
 z-index: 9999;
 }
 
@@ -1049,25 +1049,33 @@ footer {
 .footer-left {
     display: flex;
     align-items: center;
-    gap: 15px; /* Adds spacing between items */
-    font-size: 1.5rem; /* Adjust size as needed */
-    text-decoration: none; /* Remove underline */
-    background-color: transparent; /* No background */
-    border-radius: 0; /* Remove circular shape */
-    padding: 0; /* No padding around icons */
-    margin: 0 10px; /* Space between icons */
+    gap: 15px; 
+    font-size: 1.5rem; 
+    text-decoration: none; 
+    background-color: transparent; 
+    border-radius: 0; 
+    padding: 0; 
+    margin: 0 10px;
+    /* ADD THIS line to bring icons to the front */
+    position: relative;
+    z-index: 2;
 }
-
 .footer-left a,
 .footer-right button {
     margin: 0 10px;
 }
 
 .footer-center {
-    position: absolute; /* Allows precise placement */
-    left: 50%; /* Moves the element horizontally */
-    transform: translateX(-50%); /* Centers it by adjusting for its width */
+    position: absolute; 
+    left: 50%; 
+    transform: translateX(-50%); 
     text-align: center;
+    /* ADD THIS line to allow clicks to pass through to items underneath */
+    pointer-events: none; 
+}
+
+.footer-center p {
+    pointer-events: auto;
 }
 
 /* Social icon styles */
@@ -1078,6 +1086,12 @@ footer {
 .social-icon-footer:hover {
     color: #cef9ff;
 }
+
+ .footer-left img 
+    {
+        width: 30px;
+        height: 30px;   
+    }
 
 @media (max-width: 768px) {
     footer {
@@ -1090,15 +1104,26 @@ footer {
         width: 100%; /* Takes the full width */
         display: flex;
         justify-content: center; /* Centers the content */
-        padding-bottom: 40px; /* Adds spacing below */
+        padding-bottom: 20px; /* Adds spacing below */
     }
 
     .footer-center {
-        width: 100%; /* Moves to a new line and takes full width */
-        display: flex;
-        justify-content: center; /* Centers the content */
-        padding-top: 40px;
+        position: relative; /* Change from absolute */
+        left: 0;
+        transform: none;
+        width: 100%;
+        padding-bottom: 20px; /* Adds spacing below */
+
     }
+
+    .footer-left img 
+    {
+        width: 30px;
+        height: 100%;
+        padding-top: 15px;
+
+    }
+
     .social-icon-footer {
         padding-top: 15px;
     }
