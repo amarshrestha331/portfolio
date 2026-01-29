@@ -1,0 +1,2773 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dhongi - Akhir ko hola</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+            padding: 10px; /* Add a small padding to body for very small screens */
+        }
+
+        .container {
+            max-width: 500px;
+            width: 90%;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            padding: 30px 20px;
+            text-align: center;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .screen {
+            display: none;
+            text-align: center;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 1.1em;
+            cursor: pointer;
+            margin: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            width: auto; /* Allow buttons to size based on content */
+            max-width: 100%; /* Prevent overflow on very small screens */
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #20bf6b, #26de81);
+        }
+
+        .input-group {
+            margin: 20px 0;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .input-group input, .input-group select, .input-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+        }
+
+        .input-group input:focus, .input-group select:focus, .input-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        /* Role Reveal Card styling */
+        #current-player-role-display-card {
+            background: white;
+            border: 3px solid #ddd;
+            border-radius: 15px;
+            padding: 40px 20px;
+            margin: 20px auto; /* Center the card */
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
+            max-width: 300px; /* Constrain width for a single card */
+        }
+        
+        #current-player-role-display-card.revealed {
+            cursor: default;
+        }
+
+        #current-player-role-display-card.janta,
+        #current-player-role-display-card.sahayatri {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #f8f9ff, #e8ecff);
+        }
+
+        #current-player-role-display-card.dhongi {
+            border-color: #ff6b6b;
+            background: linear-gradient(135deg, #fff8f8, #ffe8e8);
+        }
+
+        .role-title {
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .role-word {
+            font-size: 2.2em;
+            font-weight: bold;
+            color: #333;
+            margin: 15px 0;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            word-break: break-word; /* Ensure long words break */
+        }
+
+        .role-description {
+            font-size: 1em;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .voting-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* Adjusted minmax for better mobile fit */
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .vote-option {
+            background: white;
+            border: 2px solid #e0e0e0;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .vote-option:hover {
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .vote-option.selected {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #f8f9ff, #e8ecff);
+        }
+
+        .vote-option input {
+            margin-right: 10px;
+        }
+
+        .game-info {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .game-info h3 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .player-list {
+            display: flex;
+            overflow-x: auto; 
+            white-space: nowrap; 
+            gap: 10px;
+            margin: 15px 0;
+            padding-bottom: 5px; 
+        }
+
+        .player-tag {
+            flex-shrink: 0; 
+            background: #667eea;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+
+        .player-tag.eliminated {
+            background: #999;
+            text-decoration: line-through;
+        }
+
+        .results {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .results h2 {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        .winner {
+            color: #20bf6b;
+        }
+
+        .loser {
+            color: #ff6b6b;
+        }
+
+        .word-pairs {
+            text-align: left;
+            max-height: 200px;
+            overflow-y: auto;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        .word-pair {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .word-pair:last-child {
+            border-bottom: none;
+        }
+
+        .timer {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #ff6b6b;
+            margin: 15px 0;
+        }
+
+        /* Styling for Edit Players Screen */
+        .edit-player-item {
+            display: flex;
+            flex-direction: column; /* Stack label and input on small screens */
+            align-items: flex-start; /* Align items to the start */
+            margin-bottom: 15px; /* More space between stacked items */
+            gap: 5px; /* Small gap between label and input */
+        }
+
+        .edit-player-item label {
+            flex: auto; /* Allow label to take necessary width */
+            text-align: left; /* Align label to left */
+            font-weight: normal;
+            width: 100%; /* Make label take full width */
+        }
+
+        .edit-player-item input {
+            flex-grow: 1; 
+        }
+        
+        .edit-player-actions {
+            display: flex;
+            flex-wrap: wrap; /* Allow buttons to wrap */
+            justify-content: center;
+            margin-top: 20px;
+            gap: 10px;
+        }
+
+        .btn.btn-small {
+            padding: 8px 15px;
+            font-size: 0.9em;
+            margin: 0;
+        }
+
+        /* --- Media Queries for Responsiveness --- */
+
+        /* General adjustments for screens up to 600px wide */
+        @media (max-width: 600px) {
+            .container {
+                width: 95%;
+                margin: 10px auto; /* Center with auto margins */
+            }
+            
+            .header h1 {
+                font-size: 2.2em; /* Slightly smaller */
+            }
+            
+            .header p {
+                font-size: 1em;
+            }
+
+            .content {
+                padding: 20px; /* Reduce padding for smaller screens */
+            }
+            
+            .btn {
+                padding: 12px 25px; /* Slightly smaller touch targets but still good */
+                font-size: 1em;
+                margin: 8px; /* Reduce margin */
+            }
+
+            #current-player-role-display-card {
+                max-width: 90%; 
+                padding: 30px 15px; /* Reduce padding */
+            }
+
+            .role-title {
+                font-size: 1.6em;
+            }
+
+            .role-word {
+                font-size: 1.8em; /* Smaller word font */
+                letter-spacing: 1px; /* Reduce letter spacing */
+            }
+
+            .role-description {
+                font-size: 0.95em;
+            }
+
+            .game-info {
+                padding: 15px; /* Smaller padding */
+            }
+
+            .input-group label {
+                font-size: 0.95em;
+            }
+
+            .input-group input, .input-group select, .input-group textarea {
+                padding: 10px; /* Smaller input padding */
+                font-size: 0.95em;
+            }
+
+            .word-pair {
+                flex-direction: column; /* Stack words vertically */
+                align-items: flex-start;
+                gap: 5px;
+            }
+        }
+
+        .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 1000;
+        padding: 20px;
+    }
+
+    .modal-content {
+        background: white;
+        padding: 30px;
+        border-radius: 20px;
+        max-width: 400px;
+        width: 100%;
+        text-align: center;
+        line-height: 1.6;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        display: flex;
+       flex-direction: column;
+       gap: 20px;
+    }
+
+    .input-group label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+        /* Further adjustments for very small screens (e.g., phones in portrait) */
+        @media (max-width: 480px) {
+            body {
+                padding: 5px; /* Even less padding on very small screens */
+            }
+
+            .container {
+                border-radius: 10px; /* Slightly smaller border-radius */
+            }
+
+            .header {
+                padding: 20px 15px;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .header p {
+                font-size: 0.9em;
+            }
+
+            .content {
+                padding: 15px;
+            }
+
+            .btn {
+                padding: 10px 20px;
+                font-size: 0.9em;
+                margin: 5px;
+                width: 100%; /* Make buttons full width on very small screens */
+            }
+
+            .btn.btn-small {
+                width: auto; /* Keep small buttons auto width if they are side-by-side */
+                padding: 6px 12px;
+                font-size: 0.85em;
+            }
+
+            #current-player-role-display-card {
+                max-width: 100%; /* Allow card to take full width */
+                padding: 25px 10px;
+            }
+
+            .role-title {
+                font-size: 1.4em;
+            }
+
+            .role-word {
+                font-size: 1.6em;
+            }
+
+            .role-description {
+                font-size: 0.9em;
+            }
+
+            .voting-grid {
+                grid-template-columns: 1fr; /* Force single column on very small screens */
+            }
+
+            .edit-player-item {
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎭 DHONGI</h1>
+            <p>Khojum Hami Madhya Ko Dhongi</p>
+        </div>
+
+        <div class="content">
+            <div id="welcome-screen" class="screen active">
+                <h2>Welcome to Dhongi!</h2>
+                <p>Yauta esto game josle asli rup dekhaucha</p>
+                <div class="game-info">
+                    <h3>How to Play:</h3>
+                    <p><strong>Janta:</strong> Get a common word, describe it without saying it directly.</p><br>
+                    <p><strong>Dhongi:</strong> Get NO word, figure out the common word, and blend in!</p><br>
+                    <p><strong>Sahayatri:</strong> Get a similar but different word. Try to guide Janta to the Dhongi!</p>
+                </div>
+                <button class="btn" onclick="showSetup()">Start Game</button>
+                <button class="btn" onclick="showWordPairs()">View Word Pairs</button>
+            </div>
+
+            <div id="setup-screen" class="screen">
+                <h2>Game Setup</h2>
+                <div class="input-group">
+                    <label for="player-count">Number of Players (3-20):</label>
+                    <input type="number" id="player-count" min="3" max="20" value="6">
+                </div>
+                <div class="input-group">
+                    <label for="include-sahayatri">Include Sahayatri?</label>
+                    <select id="include-sahayatri">
+                        <option value="yes">Yes</option>
+                        <option value="no">No</option>
+                    </select>
+                </div>
+
+                <div id="player-name-inputs">
+                </div>
+                <button class="btn btn-success" onclick="startGame()">Start Game</button>
+                <button class="btn" onclick="showWelcome()">Back</button>
+            </div>
+
+            <div id="word-pairs-screen" class="screen">
+                <h2>Word Pairs</h2>
+                <div class="word-pairs" id="word-pairs-list">
+                </div>
+                <button class="btn" onclick="showWelcome()">Back</button>
+            </div>
+
+            <div id="role-reveal-screen" class="screen">
+                <h2 id="current-player-reveal-title">Player's Turn</h2>
+                <div class="input-group" id="player-name-input-group">
+                    <label for="player-name-entry-input">Enter your name:</label>
+                    <input type="text" id="player-name-entry-input" placeholder="Your Name">
+                </div>
+                <button id="confirm-name-reveal-btn" class="btn" onclick="confirmNameAndReveal()" disabled>Confirm Name & Get Word</button>
+                
+                <div id="current-player-role-display-card" class="role-card" style="display:none;">
+                    <div class="role-title">Tap to Reveal</div>
+                    <div class="role-description">Your secret role awaits...</div>
+                </div>
+
+                <button id="next-player-reveal-btn" class="btn" onclick="incrementPlayerAndTransitionToReveal()" style="display:none;">Next Player</button>
+                <button id="pass-device-trigger-btn" class="btn" onclick="incrementPlayerAndTransitionToReveal()" style="display:none;">Next Player's Turn</button> <button id="start-discussion-final-btn" class="btn btn-success" onclick="startDiscussion()" style="display:none;">Start Discussion</button>
+            </div>
+
+            <div id="pass-device-screen" class="screen">
+                <h2>Pass the Device!</h2>
+                <p id="pass-device-message">Please pass the device to the next player. They will reveal their role on this device.</p>
+                <button id="pass-device-continue-btn" class="btn btn-success" onclick="actualShowRoleRevealScreen()">Reveal Your Word</button>
+            </div>
+
+            <div id="discussion-screen" class="screen">
+                <h2>Discussion Phase</h2>
+                <p>Discussion starts with: <strong id="first-speaker-name"></strong></p>
+                <p>Each player should give a clue about their word. Be careful not to reveal too much!</p>
+                <div class="game-info">
+                    <h3>Active Players:</h3>
+                    <div id="active-players" class="player-list">
+                    </div>
+                </div>
+                <div class="timer" id="discussion-timer"></div>
+                <button class="btn btn-success" onclick="startVoting()">Start Voting</button>
+                <button class="btn" onclick="showRules()">Show Rules</button>
+            </div>
+
+            <div id="voting-screen" class="screen">
+                <h2>Voting Phase</h2>
+                <p>Vote for who you think is the Dhongi or Sahayatri!</p>
+                <div class="voting-grid" id="voting-options">
+                </div>
+                <button class="btn btn-danger" onclick="processVotes()">Count Votes</button>
+                <button class="btn" onclick="backToDiscussion()">Back to Discussion</button>
+            </div>
+
+            <div id="results-screen" class="screen">
+                <div class="results">
+                    <h2 id="result-title">Round Results</h2>
+                    <div id="result-content">
+                    </div>
+                    <button id="start-next-discussion-round-btn" class="btn btn-success" onclick="startNextRound()" style="display: none;">Start Next Round</button>
+                    <button id="restart-same-players-btn" class="btn btn-success" onclick="restartGameWithSamePlayers()" style="display: none;">Restart with Same Players</button>
+                    <button id="edit-players-btn" class="btn" onclick="showEditPlayersScreen()" style="display: none;">Edit Players</button>
+                    <button id="new-game-btn" class="btn" onclick="newGame()">New Game</button>
+                </div>
+            </div>
+
+            <div id="edit-players-screen" class="screen">
+                <h2>Edit Player Names</h2>
+                <div id="edit-player-list" class="input-group">
+                </div>
+                <div class="edit-player-actions">
+                    <button class="btn" onclick="addPlayerToEditList()">Add Player</button>
+                    <button id="save-edited-players-btn" class="btn btn-success" onclick="saveEditedPlayers()">Save Changes</button> 
+                    <button class="btn" onclick="cancelEditPlayers()">Cancel</button>
+                </div>
+            </div>
+
+            <div id="rules-screen" class="screen">
+                <h2>Game Rules</h2>
+                <div class="game-info" style="text-align: left;">
+                    <h3>🎯 OBJECTIVE:</h3>
+                    <ul>
+                        <li><strong>Janta & Sahayatri:</strong> Find and eliminate the Dhongi</li>
+                        <li><strong>Dhongi:</strong> Survive until final 2-3 players without being detected.</li>
+                        <li><strong>Sahayatri:</strong> Help Janta identify the Dhongi while disguising your own word.</li>
+                    </ul><br>
+                    <h3>📝 DISCUSSION RULES:</h3>
+                    <ul>
+                        <li>Give clues about your word without saying it directly</li>
+                        <li>Listen carefully to spot inconsistencies</li>
+                        <li>Ask questions to test other players</li>
+                    </ul><br>
+                    <h3>🗳️ VOTING:</h3>
+                    <ul>
+                        <li>Everyone votes for who they think is suspicious</li>
+                        <li>Player with most votes is eliminated</li>
+                        <li>In case of tie, no one is eliminated</li>
+                    </ul><br>
+                    <h3>🏆 WIN CONDITIONS:</h3>
+                    <ul>
+                        <li>Dhongi eliminated &rarr; Janta/Sahayatri win</li>
+                        <li>Dhongi in final 2-3 &rarr; Dhongi wins</li>
+                        <li>Sahayatri eliminated and guesses Janta's word (and Dhongi is NOT eliminated) &rarr; Sahayatri wins</li>
+                    </ul>
+                </div>
+                <button class="btn" onclick="showScreen('discussion-screen')">Back to Discussion</button>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="sahayatri-guess-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <h3 id="sahayatri-guess-player-name">Sahayatri, you've been eliminated!</h3>
+            <p>Do you want to try to guess the Janta's word?</p>
+            <div class="input-group">
+                <label for="sahayatri-guess-input">Your Guess:</label>
+                <input type="text" id="sahayatri-guess-input" placeholder="Enter Janta's word">
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-success" onclick="processSahayatriGuess(true)">Submit Guess</button>
+                <button class="btn btn-danger" onclick="processSahayatriGuess(false)">Skip Guess</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="dhongi-reveal-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <h3 id="dhongi-reveal-player-name">Dhongi, you've been eliminated!</h3>
+            <p>Which word would you like to reveal?</p>
+            <div class="radio-options">
+                <label class="radio-option">
+                    <input type="radio" name="dhongi-reveal-choice" value="janta" id="reveal-janta-word">
+                    Janta's Word
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="dhongi-reveal-choice" value="sahayatri" id="reveal-sahayatri-word">
+                    Sahayatri's Word
+                </label>
+            </div>
+            <div class="input-group">
+                <label for="dhongi-word-guess">Enter your guess:</label>
+                <input type="text" id="dhongi-word-guess" placeholder="Type the word here...">
+            </div>
+            <div class="btn-group">
+                <button class="btn btn-success" onclick="processDhongiReveal()">Confirm Reveal</button>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        // Game state
+        let gameState = {
+            players: [],
+            currentPlayerIndex: 0, // Used for sequential role reveal
+            currentPlayer: null, // Stores the current player object for easier access
+            activePlayers: [],
+            wordPair: null,
+            availableWordPairs: [], // New: to track non-repeated word pairs
+            votes: {},
+            round: 1,
+            gameOver: false,
+            firstSpeakerId: null,
+            nextPlayerId: 1, // For assigning new player IDs
+            retainingPlayersMode: false, // New: to track if game was restarted with same players
+            eliminatedPlayerContext: null // Stores info about eliminated player for modal use
+        };
+
+        // Word pairs database
+        const wordPairs = [
+            {janta: "Apple", dhongi: "Orange"}, 
+            {janta: "Police", dhongi: "Soldier"},
+            {janta: "Doctor", dhongi: "Nurse"},
+            {janta: "Teacher", dhongi: "Student"},
+            {janta: "Cat", dhongi: "Dog"},
+            {janta: "Coffee", dhongi: "Tea"},
+            {janta: "Mountain", dhongi: "Hill"},
+            {janta: "Ocean", dhongi: "Lake"},
+            {janta: "Sun", dhongi: "Moon"},
+            {janta: "Winter", dhongi: "Summer"},
+            {janta: "Book", dhongi: "Magazine"},
+            {janta: "Car", dhongi: "Motorcycle"},
+            {janta: "Pizza", dhongi: "Burger"},
+            {janta: "Guitar", dhongi: "Piano"},
+            {janta: "Football", dhongi: "Basketball"},
+            {janta: "Lion", dhongi: "Tiger"},
+            {janta: "Rose", dhongi: "Tulip"},
+            {janta: "Airplane", dhongi: "Helicopter"},
+            {janta: "River", dhongi: "Stream"},
+            {janta: "Castle", dhongi: "Palace"},
+    {janta: "Tilted", dhongi: "Slanted"},
+    {janta: "Thin", dhongi: "Slender"},
+    {janta: "Water", dhongi: "H2o"},
+    {janta: "Submarine", dhongi: "Vessel"},
+    {janta: "Yellow", dhongi: "Lemon"},
+    {janta: "Plain", dhongi: "Ordinary"},
+    {janta: "Bowl", dhongi: "Dish"},
+    {janta: "Magazine", dhongi: "Periodical"},
+    {janta: "Least", dhongi: "Minority"},
+    {janta: "Brave", dhongi: "Courageous"},
+    {janta: "Flashlight", dhongi: "Torch"},
+    {janta: "Costume", dhongi: "Attire"},
+    {janta: "Many", dhongi: "Numerous"},
+    {janta: "Drug", dhongi: "Narcotic"},
+    {janta: "Can", dhongi: "Tin"},
+    {janta: "Thick", dhongi: "Dense"},
+    {janta: "Dirty", dhongi: "Filthy"},
+    {janta: "Sale", dhongi: "Discount"},
+    {janta: "Atlas", dhongi: "Map"},
+    {janta: "Knife", dhongi: "Dagger"},
+    {janta: "Necessary", dhongi: "Essential"},
+    {janta: "Sharp", dhongi: "Keen"},
+    {janta: "Money", dhongi: "Currency"},
+    {janta: "Bill", dhongi: "Statement"},
+    {janta: "Secret", dhongi: "Confidential"},
+    {janta: "Socks", dhongi: "Stockings"},
+    {janta: "Party", dhongi: "Celebration"},
+    {janta: "Job", dhongi: "Occupation"},
+    {janta: "Bored", dhongi: "Uninterested"},
+    {janta: "Event", dhongi: "Occasion"},
+    {janta: "Bathroom", dhongi: "Lavatory"},
+    {janta: "Dolphin", dhongi: "Porpoise"},
+    {janta: "Holiday", dhongi: "Festival"},
+    {janta: "Liquid", dhongi: "Fluid"},
+    {janta: "Red", dhongi: "Crimson"},
+    {janta: "Fare", dhongi: "Fee"},
+    {janta: "Tea", dhongi: "Infusion"},
+    {janta: "Basis", dhongi: "Groundwork"},
+    {janta: "Tool", dhongi: "Implement"},
+    {janta: "Copy", dhongi: "Duplicate"},
+    {janta: "Attack", dhongi: "Assault"},
+    {janta: "Celebration", dhongi: "Festivity"},
+    {janta: "Restaurant", dhongi: "Eatery"},
+    {janta: "Answer", dhongi: "Response"},
+    {janta: "Chalk", dhongi: "Pastel"},
+    {janta: "School", dhongi: "College"},
+    {janta: "Unbalanced", dhongi: "Unstable"},
+    {janta: "Shoes", dhongi: "Boots"},
+    {janta: "Wisdom", dhongi: "Insight"},
+    {janta: "Broom", dhongi: "Mop"},
+    {janta: "Sculpture", dhongi: "Statue"},
+    {janta: "Soup", dhongi: "Broth"},
+    {janta: "Faraway", dhongi: "Distant"},
+    {janta: "Thought", dhongi: "Idea"},
+    {janta: "Rubber", dhongi: "Latex"},
+    {janta: "Office", dhongi: "Workplace"},
+    {janta: "Soda", dhongi: "Pop"},
+    {janta: "Jungle", dhongi: "Rainforest"},
+    {janta: "Camera", dhongi: "Camcorder"},
+    {janta: "Glue", dhongi: "Paste"},
+    {janta: "Normal", dhongi: "Standard"},
+    {janta: "Knife", dhongi: "Cutter"},
+    {janta: "Clover", dhongi: "Shamrock"},
+    {janta: "Closed", dhongi: "Shut"},
+    {janta: "Vaccine", dhongi: "Immunization"},
+    {janta: "Dog", dhongi: "Wolf"},
+    {janta: "Certain", dhongi: "Sure"},
+    {janta: "Cash", dhongi: "Currency"},
+    {janta: "Product", dhongi: "Merchandise"},
+    {janta: "Battery", dhongi: "Cell"},
+    {janta: "Frog", dhongi: "Fish"},
+    {janta: "Unequal", dhongi: "Disparate"},
+    {janta: "Tire", dhongi: "Wheel"},
+    {janta: "Coat", dhongi: "Jacket"},
+    {janta: "Speaker", dhongi: "Amplifier"},
+    {janta: "Perfume", dhongi: "Cologne"},
+    {janta: "Scissors", dhongi: "Shears"},
+    {janta: "True", dhongi: "Factual"},
+    {janta: "Oak", dhongi: "Maple"},
+    {janta: "February", dhongi: "Second month"},
+    {janta: "Chaotic", dhongi: "Disordered"},
+    {janta: "Thanksgiving", dhongi: "Harvest festival"},
+    {janta: "Unimportant", dhongi: "Insignificant"},
+    {janta: "Subheading", dhongi: "Subheader"},
+    {janta: "Westward", dhongi: "Western"},
+    {janta: "Triangle", dhongi: "Pyramid"},
+    {janta: "Bedroom", dhongi: "Chamber"},
+    {janta: "Week", dhongi: "Fortnight"},
+    {janta: "Price", dhongi: "Cost"},
+    {janta: "Class", dhongi: "Group"},
+    {janta: "Fish", dhongi: "Salmon"},
+    {janta: "Hammer", dhongi: "Mallet"},
+    {janta: "Calendar", dhongi: "Almanac"},
+    {janta: "Chart", dhongi: "Graph"},
+    {janta: "Tablet", dhongi: "Slate"},
+    {janta: "Rough", dhongi: "Coarse"},
+    {janta: "Title", dhongi: "Designation"},
+    {janta: "There", dhongi: "In that place"},
+    {janta: "Anywhere", dhongi: "Wherever"},
+    {janta: "Scarf", dhongi: "Muffler"},
+    {janta: "Fence", dhongi: "Hedge"},
+    {janta: "Caption", dhongi: "Subtitle"},
+    {janta: "Variant", dhongi: "Alternative"},
+    {janta: "Aim", dhongi: "Target"},
+    {janta: "Template", dhongi: "Stencil"},
+    {janta: "House", dhongi: "Cabin"},
+    {janta: "Soft", dhongi: "Tender"},
+    {janta: "Pen", dhongi: "Quill"},
+    {janta: "Winter", dhongi: "Hibernal"},
+    {janta: "Earthquake", dhongi: "Tremor"},
+    {janta: "Orange", dhongi: "Amber"},
+    {janta: "Valley", dhongi: "Basin"},
+    {janta: "Tunnel", dhongi: "Underpass"},
+    {janta: "Fan", dhongi: "Blower"},
+    {janta: "Issue", dhongi: "Matter"},
+    {janta: "Nail", dhongi: "Spike"},
+    {janta: "Concern", dhongi: "Worry"},
+    {janta: "Past", dhongi: "History"},
+    {janta: "Workbook", dhongi: "Exercise book"},
+    {janta: "Loss", dhongi: "Deficit"},
+    {janta: "Dust", dhongi: "Powder"},
+    {janta: "White", dhongi: "Ivory"},
+    {janta: "Mall", dhongi: "Shopping center"},
+    {janta: "Chain", dhongi: "Rope"},
+    {janta: "Throw", dhongi: "Toss"},
+    {janta: "Rope", dhongi: "Chain"},
+    {janta: "Timetable", dhongi: "Roster"},
+    {janta: "Wind", dhongi: "Breeze"},
+    {janta: "Clean", dhongi: "Hygienic"},
+    {janta: "Often", dhongi: "Frequently"},
+    {janta: "Backward", dhongi: "Reverse"},
+    {janta: "Homework", dhongi: "Assignment"},
+    {janta: "Sugar", dhongi: "Salt"},
+    {janta: "Heater", dhongi: "Radiator"},
+    {janta: "Equal", dhongi: "Equivalent"},
+    {janta: "Pencil", dhongi: "Crayon"},
+    {janta: "Tip", dhongi: "Gratuity"},
+    {janta: "Pencil", dhongi: "Pen"},
+    {janta: "Education", dhongi: "Schooling"},
+    {janta: "Market", dhongi: "Bazaar"},
+    {janta: "Open", dhongi: "Accessible"},
+    {janta: "Tax", dhongi: "Duty"},
+    {janta: "Attitude", dhongi: "Mindset"},
+    {janta: "First", dhongi: "Initial"},
+    {janta: "Full", dhongi: "Complete"},
+    {janta: "Algae", dhongi: "Seaweed"},
+    {janta: "Dull", dhongi: "Blunt"},
+    {janta: "Hotel", dhongi: "Inn"},
+    {janta: "Chemistry", dhongi: "Alchemy"},
+    {janta: "Steak", dhongi: "Fillet"},
+    {janta: "River", dhongi: "Stream"},
+    {janta: "Receipt", dhongi: "Invoice"},
+    {janta: "Clock", dhongi: "Watch"},
+    {janta: "Computer", dhongi: "Laptop"},
+    {janta: "Pretty", dhongi: "Attractive"},
+    {janta: "Scale", dhongi: "Balance"},
+    {janta: "Taxi", dhongi: "Cab"},
+    {janta: "Menu", dhongi: "Bill of fare"},
+    {janta: "Speaker", dhongi: "Woofer"},
+    {janta: "Profit", dhongi: "Gain"},
+    {janta: "Short", dhongi: "Squat"},
+    {janta: "Bag", dhongi: "Sack"},
+    {janta: "Boots", dhongi: "Galoshes"},
+    {janta: "Whole", dhongi: "Entire"},
+    {janta: "Barrier", dhongi: "Blockade"},
+    {janta: "Day", dhongi: "Daylight"},
+    {janta: "Ice", dhongi: "Snow"},
+    {janta: "Brush", dhongi: "Comb"},
+    {janta: "Towel", dhongi: "Cloth"},
+    {janta: "Toothpaste", dhongi: "Gel"},
+    {janta: "Work", dhongi: "Labor"},
+    {janta: "Screw", dhongi: "Bolt"},
+    {janta: "Hope", dhongi: "Aspiration"},
+    {janta: "Apple", dhongi: "Orange"},
+    {janta: "Mood", dhongi: "Temperament"},
+    {janta: "Valentine's day", dhongi: "February 14th"},
+    {janta: "Dirty", dhongi: "Soiled"},
+    {janta: "Thursday", dhongi: "Fourth day"},
+    {janta: "Label", dhongi: "Tag"},
+    {janta: "Grocer", dhongi: "Supermarket"},
+    {janta: "Wednesday", dhongi: "Midweek"},
+    {janta: "Trip", dhongi: "Journey"},
+    {janta: "Jellyfish", dhongi: "Anemone"},
+    {janta: "Seagull", dhongi: "Albatross"},
+    {janta: "First name", dhongi: "Given name"},
+    {janta: "Sun", dhongi: "Sol"},
+    {janta: "More", dhongi: "Additional"},
+    {janta: "Nutrition", dhongi: "Diet"},
+    {janta: "Up", dhongi: "Above"},
+    {janta: "Sunflower", dhongi: "Marigold"},
+    {janta: "April", dhongi: "Fourth month"},
+    {janta: "Octopus", dhongi: "Squid"},
+    {janta: "Rule", dhongi: "Regulation"},
+    {janta: "Common", dhongi: "Ordinary"},
+    {janta: "Phone", dhongi: "Handset"},
+    {janta: "Milk", dhongi: "Dairy"},
+    {janta: "Account", dhongi: "Ledger"},
+    {janta: "Mathematics", dhongi: "Arithmetic"},
+    {janta: "Shoes", dhongi: "Loafers"},
+    {janta: "Makeup", dhongi: "Cosmetics"},
+    {janta: "Middle name", dhongi: "Second name"},
+    {janta: "Organized", dhongi: "Arranged"},
+    {janta: "Top", dhongi: "Summit"},
+    {janta: "Fire", dhongi: "Blaze"},
+    {janta: "Diagram", dhongi: "Illustration"},
+    {janta: "Narrow", dhongi: "Slim"},
+    {janta: "Small", dhongi: "Tiny"},
+    {janta: "Independence day", dhongi: "Fourth of july"},
+    {janta: "Thread", dhongi: "Yarn"},
+    {janta: "Doctor", dhongi: "Physician"},
+    {janta: "Purpose", dhongi: "Intention"},
+    {janta: "Pan", dhongi: "Skillet"},
+    {janta: "Bread", dhongi: "Bun"},
+    {janta: "Appointment", dhongi: "Meeting"},
+    {janta: "Mall", dhongi: "Plaza"},
+    {janta: "Envelope", dhongi: "Pouch"},
+    {janta: "Cause", dhongi: "Reason"},
+    {janta: "Planet", dhongi: "Star"},
+    {janta: "Pot", dhongi: "Cauldron"},
+    {janta: "Stone", dhongi: "Pebble"},
+    {janta: "Experiment", dhongi: "Trial"},
+    {janta: "Army", dhongi: "Military"},
+    {janta: "Remote", dhongi: "Controller"},
+    {janta: "Wallet", dhongi: "Billfold"},
+    {janta: "Medicine", dhongi: "Healthcare"},
+    {janta: "Owl", dhongi: "Nightjar"},
+    {janta: "Second", dhongi: "Moment"},
+    {janta: "Store", dhongi: "Shop"},
+    {janta: "Fantasy", dhongi: "Illusion"},
+    {janta: "Dagger", dhongi: "Knife"},
+    {janta: "Stage", dhongi: "Platform"},
+    {janta: "Grade", dhongi: "Mark"},
+    {janta: "Pine", dhongi: "Fir"},
+    {janta: "Invisible", dhongi: "Hidden"},
+    {janta: "Door", dhongi: "Entrance"},
+    {janta: "Rock", dhongi: "Stone"},
+    {janta: "Left", dhongi: "Remaining"},
+    {janta: "Notebook", dhongi: "Journal"},
+    {janta: "Daisy", dhongi: "Daffodil"},
+    {janta: "Wolf", dhongi: "Dog"},
+    {janta: "Clear", dhongi: "Obvious"},
+    {janta: "Century", dhongi: "Millennium"},
+    {janta: "Scorpion", dhongi: "Tarantula"},
+    {janta: "Mug", dhongi: "Cup"},
+    {janta: "Evaluation", dhongi: "Appraisal"},
+    {janta: "Class", dhongi: "Course"},
+    {janta: "Angry", dhongi: "Furious"},
+    {janta: "Soldier", dhongi: "Police"},
+    {janta: "Train", dhongi: "Locomotive"},
+    {janta: "Shelf", dhongi: "Rack"},
+    {janta: "Public", dhongi: "Communal"},
+    {janta: "Earth", dhongi: "Terra"},
+    {janta: "Tablet", dhongi: "Phone"},
+    {janta: "Sand", dhongi: "Gravel"},
+    {janta: "Almost", dhongi: "Nearly"},
+    {janta: "Side", dhongi: "Flank"},
+    {janta: "Tuesday", dhongi: "Second day"},
+    {janta: "Desk", dhongi: "Table"},
+    {janta: "Immoral", dhongi: "Unethical"},
+    {janta: "Discount", dhongi: "Reduction"},
+    {janta: "Mystery", dhongi: "Enigma"},
+    {janta: "Tundra", dhongi: "Taiga"},
+    {janta: "Occupation", dhongi: "Vocation"},
+    {janta: "Question", dhongi: "Inquiry"},
+    {janta: "Complex", dhongi: "Intricate"},
+    {janta: "Healthy", dhongi: "Fit"},
+    {janta: "Toy", dhongi: "Doll"},
+    {janta: "Supper", dhongi: "Late meal"},
+    {janta: "Fair", dhongi: "Just"},
+    {janta: "Here", dhongi: "In this place"},
+    {janta: "Raccoon", dhongi: "Badger"},
+    {janta: "Father's day", dhongi: "Paternal"},
+    {janta: "Meal", dhongi: "Cuisine"},
+    {janta: "Halloween", dhongi: "All hallows' eve"},
+    {janta: "Advanced", dhongi: "Sophisticated"},
+    {janta: "Win", dhongi: "Victory"},
+    {janta: "Candle", dhongi: "Lamp"},
+    {janta: "Rigid", dhongi: "Stiff"},
+    {janta: "Bamboo", dhongi: "Reed"},
+    {janta: "Wall", dhongi: "Partition"},
+    {janta: "False", dhongi: "Untrue"},
+    {janta: "Floor", dhongi: "Ground"},
+    {janta: "Good", dhongi: "Virtuous"},
+    {janta: "Window", dhongi: "Pane"},
+    {janta: "Tall", dhongi: "Lofty"},
+    {janta: "Cabinet", dhongi: "Cupboard"},
+    {janta: "Sword", dhongi: "Saber"},
+    {janta: "Recovery", dhongi: "Healing"},
+    {janta: "Motorcycle", dhongi: "Scooter"},
+    {janta: "Laptop", dhongi: "Notebook"},
+    {janta: "Moon", dhongi: "Crescent"},
+    {janta: "Initials", dhongi: "Letters"},
+    {janta: "Funeral", dhongi: "Memorial"},
+    {janta: "Utensil", dhongi: "Tool"},
+    {janta: "Calm", dhongi: "Serene"},
+    {janta: "Free", dhongi: "Liberated"},
+    {janta: "Planner", dhongi: "Organizer"},
+    {janta: "New year", dhongi: "January 1st"},
+    {janta: "Toaster", dhongi: "Grill"},
+    {janta: "Pen", dhongi: "Stylus"},
+    {janta: "Pliers", dhongi: "Tongs"},
+    {janta: "Airplane", dhongi: "Jet"},
+    {janta: "Neither", dhongi: "Nor"},
+    {janta: "Schedule", dhongi: "Timetable"},
+    {janta: "Solid", dhongi: "Firm"},
+    {janta: "Impossible", dhongi: "Unattainable"},
+    {janta: "Birthday", dhongi: "Anniversary"},
+    {janta: "Soon", dhongi: "Shortly"},
+    {janta: "Catch", dhongi: "Grab"},
+    {janta: "Yesterday", dhongi: "The day before"},
+    {janta: "Suitcase", dhongi: "Trunk"},
+    {janta: "Cloud", dhongi: "Fog"},
+    {janta: "Lightning", dhongi: "Thunder"},
+    {janta: "Route", dhongi: "Path"},
+    {janta: "Level", dhongi: "Even"},
+    {janta: "Bike", dhongi: "Bicycle"},
+    {janta: "Clock", dhongi: "Timer"},
+    {janta: "Direction", dhongi: "Bearing"},
+    {janta: "Structure", dhongi: "Framework"},
+    {janta: "View", dhongi: "Perspective"},
+    {janta: "Salary", dhongi: "Wage"},
+    {janta: "Nurse", dhongi: "Caregiver"},
+    {janta: "Intelligence", dhongi: "Intellect"},
+    {janta: "Bill", dhongi: "Note"},
+    {janta: "Script", dhongi: "Screenplay"},
+    {janta: "Qualification", dhongi: "Credential"},
+    {janta: "Jacket", dhongi: "Blazer"},
+    {janta: "Front", dhongi: "Forward"},
+    {janta: "Necklace", dhongi: "Chain"},
+    {janta: "Plastic", dhongi: "Polymer"},
+    {janta: "Spherical", dhongi: "Globular"},
+    {janta: "Past", dhongi: "Bygone"},
+    {janta: "Gas", dhongi: "Vapor"},
+    {janta: "Valuable", dhongi: "Precious"},
+    {janta: "Electric", dhongi: "Battery"},
+    {janta: "Sponge", dhongi: "Scrubber"},
+    {janta: "Ceiling", dhongi: "Roof"},
+    {janta: "Bridge", dhongi: "Viaduct"},
+    {janta: "Poem", dhongi: "Verse"},
+    {janta: "Less", dhongi: "Fewer"},
+    {janta: "General", dhongi: "Commander"},
+    {janta: "Root", dhongi: "Foundation"},
+    {janta: "Bank", dhongi: "Treasury"},
+    {janta: "Earrings", dhongi: "Studs"},
+    {janta: "Cap", dhongi: "Hat"},
+    {janta: "Chicken", dhongi: "Poultry"},
+    {janta: "Department", dhongi: "Section"},
+    {janta: "Upstairs", dhongi: "Above"},
+    {janta: "Jeans", dhongi: "Denim"},
+    {janta: "Major", dhongi: "Significant"},
+    {janta: "Ground", dhongi: "Floor"},
+    {janta: "These", dhongi: "Those"},
+    {janta: "Corner", dhongi: "Angle"},
+    {janta: "Lobster", dhongi: "Crab"},
+    {janta: "Stairs", dhongi: "Steps"},
+    {janta: "Train", dhongi: "Metro"},
+    {janta: "Key", dhongi: "Lock"},
+    {janta: "Present", dhongi: "Now"},
+    {janta: "Month", dhongi: "Lunar"},
+    {janta: "Dictionary", dhongi: "Lexicon"},
+    {janta: "Watch", dhongi: "Timepiece"},
+    {janta: "Meadow", dhongi: "Pasture"},
+    {janta: "Skill", dhongi: "Expertise"},
+    {janta: "Empty", dhongi: "Vacant"},
+    {janta: "Worthless", dhongi: "Futile"},
+    {janta: "Variable", dhongi: "Fluctuating"},
+    {janta: "Clock", dhongi: "Sundial"},
+    {janta: "Enough", dhongi: "Sufficient"},
+    {janta: "Usually", dhongi: "Typically"},
+    {janta: "Soap", dhongi: "Detergent"},
+    {janta: "Beautiful", dhongi: "Gorgeous"},
+    {janta: "Dice", dhongi: "Dominoes"},
+    {janta: "Problem", dhongi: "Dilemma"},
+    {janta: "Name", dhongi: "Title"},
+    {janta: "About", dhongi: "Approximately"},
+    {janta: "Glass", dhongi: "Crystal"},
+    {janta: "Somewhere", dhongi: "Anyplace"},
+    {janta: "Customer", dhongi: "Client"},
+    {janta: "Job", dhongi: "Employment"},
+    {janta: "Form", dhongi: "Format"},
+    {janta: "Monday", dhongi: "Start of week"},
+    {janta: "East", dhongi: "Oriental"},
+    {janta: "Drought", dhongi: "Famine"},
+    {janta: "Helicopter", dhongi: "Chopper"},
+    {janta: "Drill", dhongi: "Borer"},
+    {janta: "Partial", dhongi: "Incomplete"},
+    {janta: "Surgery", dhongi: "Operation"},
+    {janta: "Calendar", dhongi: "Schedule"},
+    {janta: "Bottle", dhongi: "Flask"},
+    {janta: "Approximate", dhongi: "Estimated"},
+    {janta: "Last", dhongi: "Final"},
+    {janta: "Waterfall", dhongi: "Cascade"},
+    {janta: "Beverage", dhongi: "Drink"},
+    {janta: "Possible", dhongi: "Feasible"},
+    {janta: "Bulb", dhongi: "Lamp"},
+    {janta: "Dictionary", dhongi: "Wordbook"},
+    {janta: "Legal", dhongi: "Lawful"},
+    {janta: "Known", dhongi: "Familiar"},
+    {janta: "Impact", dhongi: "Influence"},
+    {janta: "Field", dhongi: "Pitch"},
+    {janta: "Corn", dhongi: "Maize"},
+    {janta: "Star", dhongi: "Pentagon"},
+    {janta: "Dependent", dhongi: "Reliant"},
+    {janta: "Generous", dhongi: "Charitable"},
+    {janta: "Optional", dhongi: "Elective"},
+    {janta: "June", dhongi: "Sixth month"},
+    {janta: "Snack", dhongi: "Bite"},
+    {janta: "Bread", dhongi: "Baguette"},
+    {janta: "Both", dhongi: "Either"},
+    {janta: "Task", dhongi: "Chore"},
+    {janta: "Blue", dhongi: "Azure"},
+    {janta: "Fee", dhongi: "Charge"},
+    {janta: "Mushroom", dhongi: "Toadstool"},
+    {janta: "Tiger", dhongi: "Cat"},
+    {janta: "Jar", dhongi: "Crock"},
+    {janta: "Glacier", dhongi: "Iceberg"},
+    {janta: "Breakfast", dhongi: "Morning meal"},
+    {janta: "Result", dhongi: "Outcome"},
+    {janta: "Heading", dhongi: "Header"},
+    {janta: "Middle", dhongi: "Center"},
+    {janta: "Saw", dhongi: "Blade"},
+    {janta: "Bad", dhongi: "Wicked"},
+    {janta: "Technology", dhongi: "Engineering"},
+    {janta: "Mirror", dhongi: "Looking glass"},
+    {janta: "Right", dhongi: "Starboard"},
+    {janta: "Holiday", dhongi: "Vacation"},
+    {janta: "Pilot", dhongi: "Aviator"},
+    {janta: "Plan", dhongi: "Layout"},
+    {janta: "Magazine", dhongi: "Book"},
+    {janta: "Leather", dhongi: "Hide"},
+    {janta: "Bargain", dhongi: "Deal"},
+    {janta: "Garage", dhongi: "Carport"},
+    {janta: "August", dhongi: "Eighth month"},
+    {janta: "Upward", dhongi: "Ascending"},
+    {janta: "Full name", dhongi: "Complete name"},
+    {janta: "Ceramic", dhongi: "Porcelain"},
+    {janta: "Pointed", dhongi: "Tapered"},
+    {janta: "Buffalo", dhongi: "Cow"},
+    {janta: "Sweater", dhongi: "Jumper"},
+    {janta: "Lion", dhongi: "Leopard"},
+    {janta: "Cat", dhongi: "Tiger"},
+    {janta: "Street", dhongi: "Avenue"},
+    {janta: "Prototype", dhongi: "Archetype"},
+    {janta: "Track", dhongi: "Course"},
+    {janta: "Kick", dhongi: "Punt"},
+    {janta: "Concept", dhongi: "Notion"},
+    {janta: "Headphones", dhongi: "Earphones"},
+    {janta: "Soldier", dhongi: "Warrior"},
+    {janta: "Sunday", dhongi: "Day of rest"},
+    {janta: "Desk", dhongi: "Bureau"},
+    {janta: "Hard", dhongi: "Tough"},
+    {janta: "Wardrobe", dhongi: "Closet"},
+    {janta: "Voyage", dhongi: "Cruise"},
+    {janta: "Payment", dhongi: "Remittance"},
+    {janta: "Reef", dhongi: "Atoll"},
+    {janta: "Basic", dhongi: "Fundamental"},
+    {janta: "Coupon", dhongi: "Voucher"},
+    {janta: "Actor", dhongi: "Performer"},
+    {janta: "Weapon", dhongi: "Armament"},
+    {janta: "Gold", dhongi: "Gilt"},
+    {janta: "Knowledge", dhongi: "Learning"},
+    {janta: "Seller", dhongi: "Dealer"},
+    {janta: "Shampoo", dhongi: "Cleanser"},
+    {janta: "Debt", dhongi: "Liability"},
+    {janta: "Rice", dhongi: "Quinoa"},
+    {janta: "Tomorrow", dhongi: "The next day"},
+    {janta: "Bicycle", dhongi: "Motorcycle"},
+    {janta: "Wheat", dhongi: "Barley"},
+    {janta: "Replica", dhongi: "Reproduction"},
+    {janta: "Happy", dhongi: "Joyful"},
+    {janta: "Brook", dhongi: "Creek"},
+    {janta: "Chair", dhongi: "Seat"},
+    {janta: "Clockwise", dhongi: "Right"},
+    {janta: "Neat", dhongi: "Tidy"},
+    {janta: "Few", dhongi: "Scarce"},
+    {janta: "Bat", dhongi: "Racket"},
+    {janta: "Lesson", dhongi: "Lecture"},
+    {janta: "Health", dhongi: "Wellness"},
+    {janta: "Vacuum", dhongi: "Sweeper"},
+    {janta: "Plate", dhongi: "Platter"},
+    {janta: "October", dhongi: "Tenth month"},
+    {janta: "Gray", dhongi: "Silver"},
+    {janta: "Ancient", dhongi: "Archaic"},
+    {janta: "Pill", dhongi: "Tablet"},
+    {janta: "Coat", dhongi: "Overcoat"},
+    {janta: "Peacock", dhongi: "Pheasant"},
+    {janta: "Engine", dhongi: "Motor"},
+    {janta: "Canyon", dhongi: "Gorge"},
+    {janta: "Mirror", dhongi: "Glass"},
+    {janta: "Mother's day", dhongi: "Maternal"},
+    {janta: "Ship", dhongi: "Vessel"},
+    {janta: "Jewelry", dhongi: "Ornaments"},
+    {janta: "Approach", dhongi: "Strategy"},
+    {janta: "Pants", dhongi: "Trousers"},
+    {janta: "Blender", dhongi: "Mixer"},
+    {janta: "Kind", dhongi: "Compassionate"},
+    {janta: "Center", dhongi: "Middle"},
+    {janta: "Volcano", dhongi: "Crater"},
+    {janta: "Model", dhongi: "Prototype"},
+    {janta: "Fake", dhongi: "Imitation"},
+    {janta: "Memorial day", dhongi: "Remembrance"},
+    {janta: "Cotton", dhongi: "Linen"},
+    {janta: "Oasis", dhongi: "Spring"},
+    {janta: "Patient", dhongi: "Tolerant"},
+    {janta: "Register", dhongi: "Cashier"},
+    {janta: "Catalog", dhongi: "Directory"},
+    {janta: "Energetic", dhongi: "Lively"},
+    {janta: "Black", dhongi: "Ebony"},
+    {janta: "Sunset", dhongi: "Dusk"},
+    {janta: "Night", dhongi: "Midnight"},
+    {janta: "Ticket", dhongi: "Pass"},
+    {janta: "Savanna", dhongi: "Prairie"},
+    {janta: "Razor", dhongi: "Shaver"},
+    {janta: "Check", dhongi: "Draft"},
+    {janta: "Balanced", dhongi: "Stable"},
+    {janta: "Parrot", dhongi: "Macaw"},
+    {janta: "Flight", dhongi: "Airline"},
+    {janta: "Table", dhongi: "Desk"},
+    {janta: "Visible", dhongi: "Apparent"},
+    {janta: "Dessert", dhongi: "Sweet"},
+    {janta: "Illegal", dhongi: "Unlawful"},
+    {janta: "Real", dhongi: "Genuine"},
+    {janta: "Vest", dhongi: "Waistcoat"},
+    {janta: "Swim", dhongi: "Dive"},
+    {janta: "Thesaurus", dhongi: "Synonym finder"},
+    {janta: "Jacket", dhongi: "Coat"},
+    {janta: "Rich", dhongi: "Wealthy"},
+    {janta: "Captive", dhongi: "Imprisoned"},
+    {janta: "Sale", dhongi: "Clearance"},
+    {janta: "Light", dhongi: "Airy"},
+    {janta: "Tank", dhongi: "Artillery"},
+    {janta: "Ant", dhongi: "Termite"},
+    {janta: "Never", dhongi: "Not ever"},
+    {janta: "Oil", dhongi: "Petroleum"},
+    {janta: "Mug", dhongi: "Stein"},
+    {janta: "Atlas", dhongi: "Map collection"},
+    {janta: "Sun", dhongi: "Moon"},
+    {janta: "Glass", dhongi: "Tumbler"},
+    {janta: "Late", dhongi: "Delayed"},
+    {janta: "Printer", dhongi: "Plotter"},
+    {janta: "Dangerous", dhongi: "Hazardous"},
+    {janta: "Plug", dhongi: "Socket"},
+    {janta: "Truck", dhongi: "Car"},
+    {janta: "Anxious", dhongi: "Nervous"},
+    {janta: "Review", dhongi: "Critique"},
+    {janta: "Method", dhongi: "Technique"},
+    {janta: "End", dhongi: "Conclusion"},
+    {janta: "Screwdriver", dhongi: "Wrench"},
+    {janta: "Present", dhongi: "Current"},
+    {janta: "Medicine", dhongi: "Medication"},
+    {janta: "Cheap", dhongi: "Inexpensive"},
+    {janta: "Year", dhongi: "Annum"},
+    {janta: "Permanent", dhongi: "Enduring"},
+    {janta: "Silver", dhongi: "Argent"},
+    {janta: "Panther", dhongi: "Jaguar"},
+    {janta: "Cheetah", dhongi: "Leopard"},
+    {janta: "Wedding", dhongi: "Marriage"},
+    {janta: "Book", dhongi: "Magazine"},
+    {janta: "Encyclopedia", dhongi: "Compendium"},
+    {janta: "Sandals", dhongi: "Flip-flops"},
+    {janta: "Noon", dhongi: "Midday"},
+    {janta: "Microphone", dhongi: "Mike"},
+    {janta: "Chess", dhongi: "Checkers"},
+    {janta: "Loan", dhongi: "Mortgage"},
+    {janta: "North", dhongi: "Polar"},
+    {janta: "Age", dhongi: "Epoch"},
+    {janta: "Computer", dhongi: "Processor"},
+    {janta: "Television", dhongi: "Radio"},
+    {janta: "Star", dhongi: "Planet"},
+    {janta: "Table", dhongi: "Grid"},
+    {janta: "Movie", dhongi: "Film"},
+    {janta: "Bus", dhongi: "Van"},
+    {janta: "Back", dhongi: "Rear"},
+    {janta: "Rain", dhongi: "Drizzle"},
+    {janta: "Future", dhongi: "Upcoming"},
+    {janta: "Elevator", dhongi: "Lift"},
+    {janta: "Hit", dhongi: "Strike"},
+    {janta: "Truck", dhongi: "Lorry"},
+    {janta: "Quiz", dhongi: "Assessment"},
+    {janta: "Whale", dhongi: "Shark"},
+    {janta: "Easter", dhongi: "Pascha"},
+    {janta: "Pink", dhongi: "Rose"},
+    {janta: "Difficult", dhongi: "Challenging"},
+    {janta: "Tour", dhongi: "Excursion"},
+    {janta: "Instance", dhongi: "Case"},
+    {janta: "Monitor", dhongi: "Display"},
+    {janta: "Cafe", dhongi: "Bistro"},
+    {janta: "Experience", dhongi: "Background"},
+    {janta: "Signature", dhongi: "Autograph"},
+    {janta: "Night", dhongi: "Nighttime"},
+    {janta: "Law", dhongi: "Statute"},
+    {janta: "Chair", dhongi: "Stool"},
+    {janta: "Bus", dhongi: "Coach"},
+    {janta: "Purse", dhongi: "Handbag"},
+    {janta: "Motorcycle", dhongi: "Bicycle"},
+    {janta: "November", dhongi: "Eleventh month"},
+    {janta: "Tired", dhongi: "Exhausted"},
+    {janta: "Similar", dhongi: "Alike"},
+    {janta: "Ice", dhongi: "Frost"},
+    {janta: "Bracelet", dhongi: "Ring"},
+    {janta: "Design", dhongi: "Pattern"},
+    {janta: "Too", dhongi: "Excessively"},
+    {janta: "Exact", dhongi: "Precise"},
+    {janta: "Charger", dhongi: "Adapter"},
+    {janta: "Play", dhongi: "Recreation"},
+    {janta: "Rock", dhongi: "Boulder"},
+    {janta: "Boutique", dhongi: "Specialty store"},
+    {janta: "Lamp", dhongi: "Lantern"},
+    {janta: "Heavy", dhongi: "Weighty"},
+    {janta: "Poor", dhongi: "Needy"},
+    {janta: "Tea", dhongi: "Chai"},
+    {janta: "Flask", dhongi: "Bottle"},
+    {janta: "Rounded", dhongi: "Curved"},
+    {janta: "Sofa", dhongi: "Couch"},
+    {janta: "Jump", dhongi: "Leap"},
+    {janta: "Team", dhongi: "Squad"},
+    {janta: "Young", dhongi: "Youthful"},
+    {janta: "Index", dhongi: "Table of contents"},
+    {janta: "Wide", dhongi: "Broad"},
+    {janta: "Shirt", dhongi: "Blouse"},
+    {janta: "Sunrise", dhongi: "Dawn"},
+    {janta: "Here", dhongi: "Present"},
+    {janta: "Coin", dhongi: "Penny"},
+    {janta: "Wire", dhongi: "Cable"},
+    {janta: "Gym", dhongi: "Fitness"},
+    {janta: "Career", dhongi: "Profession"},
+    {janta: "Round", dhongi: "Circular"},
+    {janta: "Midnight", dhongi: "Witching hour"},
+    {janta: "Tree", dhongi: "Bush"},
+    {janta: "Process", dhongi: "Procedure"},
+    {janta: "Glass", dhongi: "Mirror"},
+    {janta: "Cup", dhongi: "Mug"},
+    {janta: "Book", dhongi: "Volume"},
+    {janta: "Heart", dhongi: "Valentine"},
+    {janta: "Cheese", dhongi: "Cheddar"},
+    {janta: "Stool", dhongi: "Chair"},
+    {janta: "Rocket", dhongi: "Missile"},
+    {janta: "Dream", dhongi: "Vision"},
+    {janta: "Hat", dhongi: "Beret"},
+    {janta: "Song", dhongi: "Melody"},
+    {janta: "Lunch", dhongi: "Midday meal"},
+    {janta: "Bracelet", dhongi: "Bangle"},
+    {janta: "Juice", dhongi: "Nectar"},
+    {janta: "Novel", dhongi: "Fiction"},
+    {janta: "Kitchen", dhongi: "Pantry"},
+    {janta: "Package", dhongi: "Parcel"},
+    {janta: "Gate", dhongi: "Doorway"},
+    {janta: "Ring", dhongi: "Band"},
+    {janta: "Cow", dhongi: "Buffalo"},
+    {janta: "Rich", dhongi: "Affluent"},
+    {janta: "Stream", dhongi: "River"},
+    {janta: "Edge", dhongi: "Border"},
+    {janta: "March", dhongi: "Third month"},
+    {janta: "Nowhere", dhongi: "Not anywhere"},
+    {janta: "Watch", dhongi: "Clock"},
+    {janta: "Butterfly", dhongi: "Moth"},
+    {janta: "Private", dhongi: "Personal"},
+    {janta: "Clumsy", dhongi: "Awkward"},
+    {janta: "Organization", dhongi: "Arrangement"},
+    {janta: "Regular", dhongi: "Routine"},
+    {janta: "Counter", dhongi: "Bar"},
+    {janta: "Blanket", dhongi: "Quilt"},
+    {janta: "Wine", dhongi: "Champagne"},
+    {janta: "Category", dhongi: "Classification"},
+    {janta: "Phone", dhongi: "Tablet"},
+    {janta: "Random", dhongi: "Haphazard"},
+    {janta: "Umbrella", dhongi: "Parasol"},
+    {janta: "Unfair", dhongi: "Biased"},
+    {janta: "Moon", dhongi: "Sun"},
+    {janta: "Leopard", dhongi: "Lion"},
+    {janta: "Invention", dhongi: "Creation"},
+    {janta: "Brick", dhongi: "Block"},
+    {janta: "Cabin", dhongi: "House"},
+    {janta: "Simple", dhongi: "Basic"},
+    {janta: "Horse", dhongi: "Zebra"},
+    {janta: "Fraction", dhongi: "Portion"},
+    {janta: "Shark", dhongi: "Whale"},
+    {janta: "Mouse", dhongi: "Trackball"},
+    {janta: "Trouble", dhongi: "Difficulty"},
+    {janta: "Radio", dhongi: "Television"},
+    {janta: "Compass", dhongi: "Navigator"},
+    {janta: "Knife", dhongi: "Cleaver"},
+    {janta: "Eraser", dhongi: "Rubber"},
+    {janta: "Forward", dhongi: "Ahead"},
+    {janta: "Storm", dhongi: "Tempest"},
+    {janta: "Version", dhongi: "Edition"},
+    {janta: "Police", dhongi: "Soldier"},
+    {janta: "Bottom", dhongi: "Base"},
+    {janta: "Everywhere", dhongi: "All over"},
+    {janta: "Cowardly", dhongi: "Timid"},
+    {janta: "Bed", dhongi: "Cot"},
+    {janta: "Living room", dhongi: "Parlor"},
+    {janta: "Shield", dhongi: "Armor"},
+    {janta: "Big", dhongi: "Large"},
+    {janta: "Actress", dhongi: "Star"},
+    {janta: "Beer", dhongi: "Ale"},
+    {janta: "Home", dhongi: "Residence"},
+    {janta: "Type", dhongi: "Kind"},
+    {janta: "Morning", dhongi: "A.m."},
+    {janta: "Now", dhongi: "Presently"},
+    {janta: "Van", dhongi: "Bus"},
+    {janta: "Always", dhongi: "Forever"},
+    {janta: "Inside", dhongi: "Interior"},
+    {janta: "Expensive", dhongi: "Costly"},
+    {janta: "Dark", dhongi: "Shadow"},
+    {janta: "Most", dhongi: "Majority"},
+    {janta: "Each", dhongi: "Every"},
+    {janta: "Orderly", dhongi: "Systematic"},
+    {janta: "Opposite", dhongi: "Contrary"},
+    {janta: "Fire", dhongi: "Flame"},
+    {janta: "Coffee", dhongi: "Espresso"},
+    {janta: "Honest", dhongi: "Truthful"},
+    {janta: "Today", dhongi: "This day"},
+    {janta: "Agenda", dhongi: "Itinerary"},
+    {janta: "Clean", dhongi: "Spotless"},
+    {janta: "Abnormal", dhongi: "Unusual"},
+    {janta: "All", dhongi: "Every"},
+    {janta: "Fake", dhongi: "Counterfeit"},
+    {janta: "Vendor", dhongi: "Merchant"},
+    {janta: "Cocktail", dhongi: "Mixed drink"},
+    {janta: "Maiden name", dhongi: "Birth name"},
+    {janta: "Quite", dhongi: "Rather"},
+    {janta: "Degree", dhongi: "Diploma"},
+    {janta: "Counterclockwise", dhongi: "Left"},
+    {janta: "Sofa", dhongi: "Davenport"},
+    {janta: "Early", dhongi: "Premature"},
+    {janta: "Unknown", dhongi: "Mysterious"},
+    {janta: "Blueprint", dhongi: "Schematic"},
+    {janta: "September", dhongi: "Ninth month"},
+    {janta: "Surname", dhongi: "Last name"},
+    {janta: "Labor day", dhongi: "Workers' holiday"},
+    {janta: "Wasp", dhongi: "Hornet"},
+    {janta: "Summer", dhongi: "Estival"},
+    {janta: "Camera", dhongi: "Recorder"},
+    {janta: "Ring", dhongi: "Bracelet"},
+    {janta: "Later", dhongi: "Afterward"},
+    {janta: "Boat", dhongi: "Canoe"},
+    {janta: "Puzzle", dhongi: "Riddle"},
+    {janta: "Beetle", dhongi: "Cockroach"},
+    {janta: "Air conditioner", dhongi: "Cooler"},
+    {janta: "Biology", dhongi: "Life science"},
+    {janta: "Previous", dhongi: "Prior"},
+    {janta: "Glossary", dhongi: "Lexicon"},
+    {janta: "Constant", dhongi: "Steady"},
+    {janta: "Yogurt", dhongi: "Milk"},
+    {janta: "Clock", dhongi: "Hourglass"},
+    {janta: "Boat", dhongi: "Ship"},
+    {janta: "Fan", dhongi: "Supporter"},
+    {janta: "Fuel", dhongi: "Gasoline"},
+    {janta: "Cup", dhongi: "Tumbler"},
+    {janta: "Policy", dhongi: "Guideline"},
+    {janta: "Shape", dhongi: "Form"},
+    {janta: "Example", dhongi: "Sample"},
+    {janta: "Paper", dhongi: "Parchment"},
+    {janta: "Calculator", dhongi: "Abacus"},
+    {janta: "Steam", dhongi: "Vapor"},
+    {janta: "Curved", dhongi: "Bent"},
+    {janta: "Cruel", dhongi: "Harsh"},
+    {janta: "Cardboard", dhongi: "Carton"},
+    {janta: "Elegant", dhongi: "Graceful"},
+    {janta: "Very", dhongi: "Extremely"},
+    {janta: "Spirit", dhongi: "Whiskey"},
+    {janta: "Fitness", dhongi: "Exercise"},
+    {janta: "Purple", dhongi: "Violet"},
+    {janta: "Honey", dhongi: "Syrup"},
+    {janta: "Theater", dhongi: "Cinema"},
+    {janta: "Shop", dhongi: "Store"},
+    {janta: "Keyboard", dhongi: "Keypad"},
+    {janta: "Game", dhongi: "Sport"},
+    {janta: "Grape", dhongi: "Raisin"},
+    {janta: "Rice", dhongi: "Risotto"},
+    {janta: "Treatment", dhongi: "Therapy"},
+    {janta: "Beach", dhongi: "Desert"},
+    {janta: "Marker", dhongi: "Highlighter"},
+    {janta: "Drawer", dhongi: "Compartment"},
+    {janta: "Flexible", dhongi: "Pliable"},
+    {janta: "Light", dhongi: "Glow"},
+    {janta: "Wood", dhongi: "Timber"},
+    {janta: "Falcon", dhongi: "Hawk"},
+    {janta: "Restaurant", dhongi: "Diner"},
+    {janta: "Run", dhongi: "Sprint"},
+    {janta: "Bar", dhongi: "Pub"},
+    {janta: "Shrimp", dhongi: "Prawn"},
+    {janta: "Fight", dhongi: "Wrestle"},
+    {janta: "Party", dhongi: "Gathering"},
+    {janta: "Specific", dhongi: "Particular"},
+    {janta: "Helicopter", dhongi: "Plane"},
+    {janta: "Radio", dhongi: "Transmitter"},
+    {janta: "Glass", dhongi: "Goblet"},
+    {janta: "Towel", dhongi: "Washcloth"},
+    {janta: "Newspaper", dhongi: "Gazette"},
+    {janta: "Mattress", dhongi: "Futon"},
+    {janta: "Handsome", dhongi: "Good-looking"},
+    {janta: "President's day", dhongi: "Leaders' holiday"},
+    {janta: "Music", dhongi: "Harmony"},
+    {janta: "Boots", dhongi: "Shoes"},
+    {janta: "Driver", dhongi: "Operator"},
+    {janta: "Berry", dhongi: "Currant"},
+    {janta: "Ivy", dhongi: "Vine"},
+    {janta: "Clone", dhongi: "Twin"},
+    {janta: "Tie", dhongi: "Cravat"},
+    {janta: "Peace", dhongi: "Truce"},
+    {janta: "Bakery", dhongi: "Patisserie"},
+    {janta: "Excited", dhongi: "Thrilled"},
+    {janta: "General", dhongi: "Universal"},
+    {janta: "Window", dhongi: "Door"},
+    {janta: "Brand", dhongi: "Label"},
+    {janta: "Discovery", dhongi: "Finding"},
+    {janta: "Downstairs", dhongi: "Below"},
+    {janta: "Glasses", dhongi: "Spectacles"},
+    {janta: "Restriction", dhongi: "Constraint"},
+    {janta: "Metro", dhongi: "Train"},
+    {janta: "Solution", dhongi: "Resolution"},
+    {janta: "West", dhongi: "Occidental"},
+    {janta: "Single", dhongi: "Individual"},
+    {janta: "List", dhongi: "Inventory"},
+    {janta: "Map", dhongi: "Cartograph"},
+    {janta: "Apartment", dhongi: "Flat"},
+    {janta: "Different", dhongi: "Distinct"},
+    {janta: "Poor", dhongi: "Impoverished"},
+    {janta: "Standard", dhongi: "Criterion"},
+    {janta: "Weekend", dhongi: "Saturday and sunday"},
+    {janta: "Nearby", dhongi: "Close by"},
+    {janta: "Truth", dhongi: "Fact"},
+    {janta: "Income", dhongi: "Earnings"},
+    {janta: "Outside", dhongi: "Outdoors"},
+    {janta: "Inside", dhongi: "Indoors"},
+    {janta: "Bacon", dhongi: "Ham"},
+    {janta: "Hat", dhongi: "Cap"},
+    {janta: "War", dhongi: "Battle"},
+    {janta: "Strong", dhongi: "Powerful"},
+    {janta: "Hill", dhongi: "Mountain"},
+    {janta: "Study", dhongi: "Research"},
+    {janta: "Phone", dhongi: "Smartphone"},
+    {janta: "Huge", dhongi: "Enormous"},
+    {janta: "Forbidden", dhongi: "Prohibited"},
+    {janta: "Way", dhongi: "Manner"},
+    {janta: "Ship", dhongi: "Boat"},
+    {janta: "Color", dhongi: "Hue"},
+    {janta: "Fridge", dhongi: "Cooler"},
+    {janta: "Flood", dhongi: "Deluge"},
+    {janta: "College", dhongi: "University"},
+    {janta: "Analysis", dhongi: "Examination"},
+    {janta: "Test", dhongi: "Exam"},
+    {janta: "Table", dhongi: "Counter"},
+    {janta: "Buyer", dhongi: "Purchaser"},
+    {janta: "Talent", dhongi: "Ability"},
+    {janta: "Credit", dhongi: "Debit"},
+    {janta: "Dishwasher", dhongi: "Washer"},
+    {janta: "Fork", dhongi: "Trident"},
+    {janta: "Chopsticks", dhongi: "Skewers"},
+    {janta: "Left", dhongi: "Port"},
+    {janta: "Plane", dhongi: "Helicopter"},
+    {janta: "Ruler", dhongi: "Measure"},
+    {janta: "Textbook", dhongi: "Manual"},
+    {janta: "Selfish", dhongi: "Greedy"},
+    {janta: "Christmas", dhongi: "Yuletide"},
+    {janta: "Bucket", dhongi: "Pail"},
+    {janta: "Near", dhongi: "Close"},
+    {janta: "Rose", dhongi: "Peony"},
+    {janta: "Spoon", dhongi: "Ladle"},
+    {janta: "Dessert", dhongi: "Pastry"},
+    {janta: "There", dhongi: "Yonder"},
+    {janta: "Rare", dhongi: "Scarce"},
+    {janta: "Pharmacy", dhongi: "Drugstore"},
+    {janta: "Short", dhongi: "Brief"},
+    {janta: "Saturday", dhongi: "Weekend"},
+    {janta: "Vague", dhongi: "Ambiguous"},
+    {janta: "Far", dhongi: "Distant"},
+    {janta: "Limit", dhongi: "Boundary"},
+    {janta: "Straight", dhongi: "Direct"},
+    {janta: "Trustworthy", dhongi: "Reliable"},
+    {janta: "Car", dhongi: "Automobile"},
+    {janta: "Next", dhongi: "Subsequent"},
+    {janta: "Sick", dhongi: "Ill"},
+    {janta: "Container", dhongi: "Vessel"},
+    {janta: "Photo", dhongi: "Picture"},
+    {janta: "Coffee", dhongi: "Java"},
+    {janta: "Snow", dhongi: "Flurry"},
+    {janta: "Uncertain", dhongi: "Doubtful"},
+    {janta: "Highway", dhongi: "Road"},
+    {janta: "Weak", dhongi: "Feeble"},
+    {janta: "Thermometer", dhongi: "Gauge"},
+    {janta: "Abroad", dhongi: "Overseas"},
+    {janta: "Fish", dhongi: "Frog"},
+    {janta: "Physics", dhongi: "Mechanics"},
+    {janta: "Coach", dhongi: "Trainer"},
+    {janta: "Forest", dhongi: "Woodland"},
+    {janta: "Wrong", dhongi: "Incorrect"},
+    {janta: "Right", dhongi: "Correct"},
+    {janta: "Reality", dhongi: "Actuality"},
+    {janta: "Gloves", dhongi: "Mittens"},
+    {janta: "Downward", dhongi: "Descending"},
+    {janta: "Green", dhongi: "Emerald"},
+    {janta: "Box", dhongi: "Crate"},
+    {janta: "Button", dhongi: "Zipper"},
+    {janta: "Lane", dhongi: "Alley"},
+    {janta: "Teacher", dhongi: "Instructor"},
+    {janta: "Irregular", dhongi: "Erratic"},
+    {janta: "Event", dhongi: "Function"},
+    {janta: "Long", dhongi: "Extended"},
+    {janta: "Innovation", dhongi: "Novelty"},
+    {janta: "Time", dhongi: "Era"},
+    {janta: "Messy", dhongi: "Cluttered"},
+    {janta: "Easy", dhongi: "Effortless"},
+    {janta: "Stone", dhongi: "Rock"},
+    {janta: "Pleased", dhongi: "Delighted"},
+    {janta: "Northward", dhongi: "Northern"},
+    {janta: "January", dhongi: "First month"},
+    {janta: "Shrub", dhongi: "Bush"},
+    {janta: "Tulip", dhongi: "Lily"},
+    {janta: "Exactly", dhongi: "Precisely"},
+    {janta: "Fabric", dhongi: "Textile"},
+    {janta: "Beginning", dhongi: "Start"},
+    {janta: "Afternoon", dhongi: "Midday"},
+    {janta: "Astronomy", dhongi: "Cosmology"},
+    {janta: "Cactus", dhongi: "Succulent"},
+    {janta: "Stand", dhongi: "Kiosk"},
+    {janta: "Water", dhongi: "Liquid"},
+    {janta: "Special", dhongi: "Unique"},
+    {janta: "Specimen", dhongi: "Exemplar"},
+    {janta: "Feeling", dhongi: "Emotion"},
+    {janta: "Observation", dhongi: "Inspection"},
+    {janta: "Rarely", dhongi: "Seldom"},
+    {janta: "Oven", dhongi: "Stove"},
+    {janta: "Source", dhongi: "Origin"},
+    {janta: "Butcher", dhongi: "Meat market"},
+    {janta: "Food", dhongi: "Nourishment"},
+    {janta: "Player", dhongi: "Athlete"},
+    {janta: "Cloud", dhongi: "Cumulus"},
+    {janta: "Tv", dhongi: "Television"},
+    {janta: "Modern", dhongi: "Contemporary"},
+    {janta: "Goal", dhongi: "Objective"},
+    {janta: "Triangular", dhongi: "Pyramidal"},
+    {janta: "Means", dhongi: "Mode"},
+    {janta: "Pool", dhongi: "Aquarium"},
+    {janta: "Ugly", dhongi: "Hideous"},
+    {janta: "Furniture", dhongi: "Furnishings"},
+    {janta: "Polite", dhongi: "Courteous"},
+    {janta: "Vocation", dhongi: "Calling"},
+    {janta: "Item", dhongi: "Article"},
+    {janta: "Square", dhongi: "Rectangle"},
+    {janta: "Sad", dhongi: "Sorrowful"},
+    {janta: "Director", dhongi: "Producer"},
+    {janta: "Student", dhongi: "Pupil"},
+    {janta: "College", dhongi: "School"},
+    {janta: "Mountain", dhongi: "Hill"},
+    {janta: "None", dhongi: "Zero"},
+    {janta: "Lamp", dhongi: "Candle"},
+    {janta: "Metal", dhongi: "Alloy"},
+    {janta: "Challenge", dhongi: "Obstacle"},
+    {janta: "Alcohol", dhongi: "Liquor"},
+    {janta: "Orange", dhongi: "Apple"},
+    {janta: "Calendar", dhongi: "Planner"},
+    {janta: "Spring", dhongi: "Vernal"},
+    {janta: "Original", dhongi: "Authentic"},
+    {janta: "Patient", dhongi: "Sick person"},
+    {janta: "Salad", dhongi: "Coleslaw"},
+    {janta: "Multiple", dhongi: "Numerous"},
+    {janta: "Almanac", dhongi: "Yearbook"},
+    {janta: "Plasma", dhongi: "Ionized"},
+    {janta: "Iron", dhongi: "Steel"},
+    {janta: "Square", dhongi: "Rectangular"},
+    {janta: "Kettle", dhongi: "Teapot"},
+    {janta: "Necklace", dhongi: "Pendant"},
+    {janta: "Penguin", dhongi: "Puffin"},
+    {janta: "Brooch", dhongi: "Pin"},
+    {janta: "Punch", dhongi: "Jab"},
+    {janta: "Trade", dhongi: "Craft"},
+    {janta: "Safe", dhongi: "Secure"},
+    {janta: "Book", dhongi: "Tome"},
+    {janta: "Card", dhongi: "Board"},
+    {janta: "Milk", dhongi: "Yogurt"},
+    {janta: "Bun", dhongi: "Bread"},
+    {janta: "Fern", dhongi: "Moss"},
+    {janta: "Salt", dhongi: "Sugar"},
+    {janta: "Hour", dhongi: "Minute"},
+    {janta: "Minor", dhongi: "Trivial"},
+    {janta: "Sunglasses", dhongi: "Shades"},
+    {janta: "Passenger", dhongi: "Rider"},
+    {janta: "Smooth", dhongi: "Sleek"},
+    {janta: "Wealth", dhongi: "Riches"},
+    {janta: "Sky", dhongi: "Heavens"},
+    {janta: "Aisle", dhongi: "Corridor"},
+    {janta: "Road", dhongi: "Highway"},
+    {janta: "Friday", dhongi: "End of workweek"},
+    {janta: "Silk", dhongi: "Satin"},
+    {janta: "Goal", dhongi: "Target"},
+    {janta: "Building", dhongi: "Structure"},
+    {janta: "Southward", dhongi: "Southern"},
+    {janta: "Effect", dhongi: "Consequence"},
+    {janta: "Fern", dhongi: "Bracken"},
+    {janta: "Old", dhongi: "Ancient"},
+    {janta: "Garden", dhongi: "Yard"},
+    {janta: "Lie", dhongi: "Falsehood"},
+    {janta: "December", dhongi: "Twelfth month"},
+    {janta: "Knowledge", dhongi: "Understanding"},
+    {janta: "Desert", dhongi: "Beach"},
+    {janta: "Stadium", dhongi: "Arena"},
+    {janta: "Marsh", dhongi: "Swamp"},
+    {janta: "This", dhongi: "That"},
+    {janta: "Zebra", dhongi: "Horse"},
+    {janta: "Cap", dhongi: "Beanie"},
+    {janta: "Yogurt", dhongi: "Kefir"},
+    {janta: "Map", dhongi: "Chart"},
+    {janta: "Ball", dhongi: "Sphere"},
+    {janta: "Fall", dhongi: "Autumnal"},
+    {janta: "Willow", dhongi: "Birch"},
+    {janta: "Headphones", dhongi: "Earbuds"},
+    {janta: "Wine", dhongi: "Vintage"},
+    {janta: "Snow", dhongi: "Ice"},
+    {janta: "Down", dhongi: "Below"},
+    {janta: "Geology", dhongi: "Earth science"},
+    {janta: "Rude", dhongi: "Impolite"},
+    {janta: "Belief", dhongi: "Opinion"},
+    {janta: "Defend", dhongi: "Protect"},
+    {janta: "House", dhongi: "Dwelling"},
+    {janta: "Pen", dhongi: "Pencil"},
+    {janta: "Goods", dhongi: "Wares"},
+    {janta: "Mission", dhongi: "Assignment"},
+    {janta: "Bush", dhongi: "Tree"},
+    {janta: "Submarine", dhongi: "Torpedo"},
+    {janta: "Fog", dhongi: "Cloud"},
+    {janta: "Wool", dhongi: "Fleece"},
+    {janta: "Exercise", dhongi: "Workout"},
+    {janta: "Mud", dhongi: "Sludge"},
+    {janta: "Kangaroo", dhongi: "Wallaby"},
+    {janta: "Untrustworthy", dhongi: "Shady"},
+    {janta: "Hoodie", dhongi: "Sweatshirt"},
+    {janta: "System", dhongi: "Network"},
+    {janta: "May", dhongi: "Fifth month"},
+    {janta: "Mature", dhongi: "Grown"},
+    {janta: "Temporary", dhongi: "Transient"},
+    {janta: "Balance", dhongi: "Remainder"},
+    {janta: "July", dhongi: "Seventh month"},
+    {janta: "Diary", dhongi: "Log"},
+    {janta: "Oven", dhongi: "Microwave"},
+    {janta: "Certificate", dhongi: "Credential"},
+    {janta: "Geyser", dhongi: "Hot spring"},
+    {janta: "Dune", dhongi: "Sandbank"},
+    {janta: "Allowed", dhongi: "Permitted"},
+    {janta: "Backpack", dhongi: "Rucksack"},
+    {janta: "Same", dhongi: "Identical"},
+    {janta: "Lose", dhongi: "Defeat"},
+    {janta: "Tape", dhongi: "Adhesive"},
+    {janta: "Computer", dhongi: "Workstation"},
+    {janta: "Otter", dhongi: "Beaver"},
+    {janta: "Eastward", dhongi: "Eastern"},
+    {janta: "Dinner", dhongi: "Evening meal"},
+    {janta: "Flat", dhongi: "Planar"},
+    {janta: "Desire", dhongi: "Wish"},
+    {janta: "Brown", dhongi: "Tan"},
+    {janta: "Moral", dhongi: "Ethical"},
+    {janta: "Important", dhongi: "Crucial"},
+    {janta: "Climb", dhongi: "Scale"},
+    {janta: "Genre", dhongi: "Style"},
+    {janta: "Comb", dhongi: "Brush"},
+    {janta: "Needle", dhongi: "Pin"},
+    {janta: "Query", dhongi: "Interrogation"},
+    {janta: "Laptop", dhongi: "Computer"},
+    {janta: "Sausage", dhongi: "Salami"},
+    {janta: "South", dhongi: "Equatorial"},
+    {janta: "Principle", dhongi: "Doctrine"},
+    {janta: "Impatient", dhongi: "Restless"},
+    {janta: "Pasta", dhongi: "Noodles"},
+    {janta: "Bronze", dhongi: "Brass"},
+    {janta: "Gun", dhongi: "Rifle"},
+    {janta: "Vase", dhongi: "Urn"},
+    {janta: "Minute", dhongi: "Microscopic"},
+    {janta: "School", dhongi: "Academy"},
+    {janta: "Measure", dhongi: "Metric"},
+    {janta: "Evening", dhongi: "Twilight"},
+    {janta: "Outside", dhongi: "Exterior"},
+    {janta: "Napkin", dhongi: "Tissue"},
+    {janta: "Future", dhongi: "Tomorrow"},
+    {janta: "Pillow", dhongi: "Cushion"},
+    {janta: "Dishonest", dhongi: "Deceitful"},
+    {janta: "Interest", dhongi: "Percentage"},
+    {janta: "Sometimes", dhongi: "Occasionally"},
+    {janta: "Bomb", dhongi: "Grenade"},
+    {janta: "Bowl", dhongi: "Basin"},
+    {janta: "Poverty", dhongi: "Destitution"},
+    {janta: "Hospital", dhongi: "Clinic"},
+    {janta: "Schedule", dhongi: "Agenda"},
+    {janta: "Story", dhongi: "Tale"},
+    {janta: "Dance", dhongi: "Ballet"},
+    {janta: "Cliff", dhongi: "Bluff"},
+    {janta: "Map", dhongi: "Atlas"},
+    {janta: "Spacecraft", dhongi: "Shuttle"},
+    {janta: "Weekday", dhongi: "Workday"},
+    {janta: "Plate", dhongi: "Dish"},
+    {janta: "Encyclopedia", dhongi: "Reference book"},
+    {janta: "Cafe", dhongi: "Coffeehouse"},
+    {janta: "Copper", dhongi: "Penny"},
+    {janta: "Nut", dhongi: "Seed"},
+    {janta: "Nickname", dhongi: "Alias"},
+    {janta: "Pond", dhongi: "Lagoon"},
+    {janta: "Appliance", dhongi: "Device"},
+    {janta: "Total", dhongi: "Sum"},
+    {janta: "Car", dhongi: "Truck"},
+    {janta: "Circle", dhongi: "Oval"},
+    {janta: "Mind", dhongi: "Brain"},
+    {janta: "Art", dhongi: "Painting"},
+    {janta: "Belt", dhongi: "Sash"},
+    {janta: "Smoke", dhongi: "Fumes"},
+    {janta: "Some", dhongi: "Any"},
+    {janta: "Watch", dhongi: "Chronometer"},
+    {janta: "Bank", dhongi: "Vault"},
+    {janta: "Science", dhongi: "Knowledge"},
+    {janta: "Independent", dhongi: "Autonomous"},
+    {janta: "Door", dhongi: "Window"}
+        ];
+
+        // Screen management
+        function showScreen(screenId) {
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            document.getElementById(screenId).classList.add('active');
+            hideModal(); // Ensure any open modals are closed when navigating screens
+        }
+
+        function showWelcome() {
+            showScreen('welcome-screen');
+        }
+
+        function showSetup() {
+            showScreen('setup-screen');
+            const numPlayersInput = document.getElementById('player-count');
+
+            const playerCount = parseInt(numPlayersInput.value);
+            // If starting a brand new game, populate with default player names.
+            // If coming from edit players or restart, gameState.players will be populated.
+            // Only update gameState.players array if it's empty or size mismatch (for new game setup)
+            if (gameState.players.length === 0 || gameState.players.length !== playerCount) {
+                gameState.players = [];
+                gameState.nextPlayerId = 1;
+                for (let i = 0; i < playerCount; i++) {
+                    gameState.players.push({
+                        id: gameState.nextPlayerId++,
+                        name: `Player ${i + 1}`,
+                        role: 'janta',
+                        word: '',
+                        eliminated: false,
+                        revealed: false,
+                        nameEnteredYet: false // New players need to enter their name during role reveal
+                    });
+                }
+            }
+             numPlayersInput.onchange = function() {
+                // If player count changes, adjust gameState.players array
+                const newPlayerCount = parseInt(this.value);
+                const currentPlayers = gameState.players.length;
+
+                if (newPlayerCount > currentPlayers) {
+                    for (let i = currentPlayers; i < newPlayerCount; i++) {
+                        gameState.players.push({
+                            id: gameState.nextPlayerId++,
+                            name: `Player ${i + 1}`,
+                            role: 'janta',
+                            word: '',
+                            eliminated: false,
+                            revealed: false,
+                            nameEnteredYet: false
+                        });
+                    }
+                } else if (newPlayerCount < currentPlayers) {
+                    gameState.players = gameState.players.slice(0, newPlayerCount);
+                }
+            };
+        }
+
+
+        function showWordPairs() {
+            const wordPairsList = document.getElementById('word-pairs-list');
+            wordPairsList.innerHTML = '';
+            
+            wordPairs.forEach(pair => {
+                const pairDiv = document.createElement('div');
+                pairDiv.className = 'word-pair';
+                pairDiv.innerHTML = `
+                    <span><strong>Janta:</strong> ${pair.janta}</span>
+                    <span><strong>Sahayatri:</strong> ${pair.dhongi}</span>
+                `;
+                wordPairsList.appendChild(pairDiv);
+            });
+            
+            showScreen('word-pairs-screen');
+        }
+
+        // Game initialization
+        function startGame(retainingPlayers = false) {
+            let playerCount;
+            const includeSahayatri = document.getElementById('include-sahayatri').value;
+            gameState.retainingPlayersMode = retainingPlayers; // Set the new flag
+
+            if (retainingPlayers) {
+                playerCount = gameState.players.length;
+                gameState.players.forEach(player => {
+                    player.eliminated = false;
+                    player.revealed = false; // Reset revealed status for new round
+                    // For retaining players, if name is custom, nameEnteredYet remains true.
+                    // If name is default ("Player X"), set nameEnteredYet to false to allow input.
+                    if (player.name.startsWith('Player ') && player.name.trim().length > 7) { 
+                        player.nameEnteredYet = false; 
+                    }
+                });
+            } else {
+                const numPlayersInput = document.getElementById('player-count');
+                playerCount = parseInt(numPlayersInput.value);
+                
+                if (isNaN(playerCount) || playerCount < 3 || playerCount > 20) {
+                    alert('Please enter a number between 3 and 20 for the number of players.');
+                    return;
+                }
+                
+                // For a new game, initialize players with default names. Names will be entered during role reveal.
+                gameState.players = [];
+                gameState.nextPlayerId = 1;
+                for (let i = 0; i < playerCount; i++) {
+                    gameState.players.push({
+                        id: gameState.nextPlayerId++, 
+                        name: `Player ${i + 1}`, // Default name
+                        role: 'janta', 
+                        word: '',
+                        eliminated: false,
+                        revealed: false,
+                        nameEnteredYet: false // Must enter name during reveal
+                    });
+                }
+                // Reset available word pairs for a brand new game
+                gameState.availableWordPairs = [...wordPairs]; 
+            }
+
+            // Assign roles
+            assignRoles(playerCount, includeSahayatri);
+            
+            // Choose word pair (non-repeating logic)
+            if (gameState.availableWordPairs.length === 0) {
+                // If all words used, replenish the list
+                gameState.availableWordPairs = [...wordPairs];
+                alert("All word pairs used! Repeating word pairs from the beginning.");
+            }
+            const randomIndex = Math.floor(Math.random() * gameState.availableWordPairs.length);
+            gameState.wordPair = gameState.availableWordPairs[randomIndex];
+            gameState.availableWordPairs.splice(randomIndex, 1); // Remove the used word pair
+
+            // Assign words based on new role-word mapping
+            gameState.players.forEach(player => {
+                if (player.role === 'janta') {
+                    player.word = gameState.wordPair.janta; 
+                } else if (player.role === 'sahayatri') {
+                    player.word = gameState.wordPair.dhongi; 
+                } else if (player.role === 'dhongi') {
+                    player.word = 'NO WORD - Figure it out!'; 
+                }
+            });
+
+            gameState.currentPlayerIndex = 0; // Start with the first player for sequential reveal
+            gameState.activePlayers = gameState.players.map(p => p.id); // All players active at start of game/round
+            gameState.votes = {};
+            gameState.round = 1; // Reset round to 1 for a new game
+            gameState.gameOver = false;
+            
+            // Determine the first speaker
+            gameState.firstSpeakerId = gameState.activePlayers[Math.floor(Math.random() * gameState.activePlayers.length)];
+
+            transitionToPlayerReveal(); // Start the reveal sequence, possibly with an interstitial
+        }
+
+        function assignRoles(playerCount, includeSahayatriOption) {
+            const rolesToAssign = ['dhongi']; 
+            
+            let includeSahayatri = false;
+            if (includeSahayatriOption === 'yes') { 
+                includeSahayatri = true;
+            }
+            
+            if (includeSahayatri) {
+                rolesToAssign.push('sahayatri');
+            }
+
+            const shuffledIndices = Array.from({length: playerCount}, (_, i) => i);
+            for (let i = shuffledIndices.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [shuffledIndices[i], shuffledIndices[j]] = [shuffledIndices[j], shuffledIndices[i]];
+            }
+
+            // Reset all players to janta first, then assign special roles
+            gameState.players.forEach(p => p.role = 'janta');
+
+            for (let i = 0; i < rolesToAssign.length; i++) {
+                // Ensure the shuffled index maps to an existing player object for role assignment
+                if (shuffledIndices[i] < gameState.players.length) {
+                    gameState.players[shuffledIndices[i]].role = rolesToAssign[i];
+                }
+            }
+        }
+
+        // New wrapper function to handle transitions to a player's reveal phase
+        function transitionToPlayerReveal() {
+            if (gameState.currentPlayerIndex >= gameState.players.length) {
+                // All players have revealed, proceed to discussion
+                startDiscussion();
+                return;
+            }
+
+            const passDeviceMessage = document.getElementById('pass-device-message');
+            const passDeviceBtn = document.getElementById('pass-device-continue-btn');
+
+            if (gameState.retainingPlayersMode) {
+                // When retaining players, *always* show the pass device screen first for this player's turn
+                const playerName = gameState.players[gameState.currentPlayerIndex].name;
+                passDeviceMessage.innerHTML = `Please pass the device to <strong>${playerName}</strong>. They will reveal their role on this device.`;
+                passDeviceBtn.textContent = "Reveal Your Word"; // The button to start current player's actual reveal
+                showScreen('pass-device-screen');
+            } else {
+                // If not retaining players (new game), go directly to the role reveal content
+                actualShowRoleRevealScreen();
+            }
+        }
+
+        // Renamed and refactored from showRoleRevealScreen()
+        // This function contains the actual logic for displaying a player's name input and role card
+        function actualShowRoleRevealScreen() {
+            gameState.currentPlayer = gameState.players[gameState.currentPlayerIndex];
+            
+            const nameInputGroup = document.getElementById('player-name-input-group');
+            const nameInput = document.getElementById('player-name-entry-input');
+            const confirmBtn = document.getElementById('confirm-name-reveal-btn');
+            const roleCard = document.getElementById('current-player-role-display-card');
+            const nextPlayerBtn = document.getElementById('next-player-reveal-btn'); 
+            const passDeviceTriggerBtn = document.getElementById('pass-device-trigger-btn'); 
+            const startDiscussionBtn = document.getElementById('start-discussion-final-btn');
+
+            // Reset card and button/input states
+            nameInput.value = gameState.currentPlayer.nameEnteredYet ? gameState.currentPlayer.name : ''; // Now empty if not entered yet
+            nameInput.oninput = function() { // Add event listener for dynamic button enabling/disabling
+                confirmBtn.disabled = this.value.trim() === '';
+            };
+            confirmBtn.disabled = nameInput.value.trim() === ''; // Set initial state based on pre-filled value
+            roleCard.style.display = 'none'; // Hide card initially
+            roleCard.className = 'role-card'; // Reset classes
+            
+            // Hide all action buttons related to proceeding after reveal
+            nextPlayerBtn.style.display = 'none';
+            passDeviceTriggerBtn.style.display = 'none';
+            startDiscussionBtn.style.display = 'none';
+
+            if (gameState.currentPlayer.nameEnteredYet) { 
+                // If name was already entered (custom name), display name and auto-reveal role
+                document.getElementById('current-player-reveal-title').textContent = `${gameState.currentPlayer.name}'s Turn`;
+                nameInputGroup.style.display = 'none';
+                confirmBtn.style.display = 'none'; // Hide the button as it's not needed for input
+                revealCurrentPlayerRoleDisplayContent(); // Auto-trigger reveal content
+            } else { 
+                // New player or name not entered yet (could be default "Player X" or truly empty)
+                document.getElementById('current-player-reveal-title').textContent = `Player's Turn`;
+                nameInputGroup.style.display = 'block';
+                confirmBtn.style.display = 'inline-block'; // Show the button for input/reveal
+                nameInput.focus();
+            }
+
+            showScreen('role-reveal-screen');
+        }
+
+        function confirmNameAndReveal() {
+            const player = gameState.currentPlayer; 
+            const nameInput = document.getElementById('player-name-entry-input');
+            const confirmBtn = document.getElementById('confirm-name-reveal-btn');
+            const playerName = nameInput.value.trim();
+
+            if (playerName === '') { // Validate if the name is empty (even after trim)
+                alert('Please enter your name!');
+                return;
+            }
+            
+            player.name = playerName; // Update the player's actual name
+            player.nameEnteredYet = true; // Mark name as entered for this session
+            
+            // Hide the name input and the confirm button now that name is confirmed
+            document.getElementById('player-name-input-group').style.display = 'none';
+            confirmBtn.style.display = 'none';
+
+            // Update the title to reflect the confirmed name
+            document.getElementById('current-player-reveal-title').textContent = `${player.name}'s Turn`;
+
+            // Now reveal the role on the card
+            revealCurrentPlayerRoleDisplayContent();
+        }
+
+        function revealCurrentPlayerRoleDisplayContent() {
+            const player = gameState.currentPlayer; 
+            const roleCard = document.getElementById('current-player-role-display-card');
+            
+            // If the card is already revealed, no need to re-reveal
+            if (player.revealed) {
+                return; 
+            }
+
+            player.revealed = true;
+            roleCard.style.display = 'flex'; // Show the card
+            roleCard.classList.add(player.role);
+            roleCard.classList.add('revealed'); // Add revealed class to change cursor
+            
+            try {
+                playSound('reveal');
+            } catch (e) {
+                // Ignore audio errors
+            }
+            
+            let cardContentHtml;
+            
+            switch (player.role) {
+                case 'janta':
+                    cardContentHtml = `
+                        <div class="role-word">${player.word}</div>
+                    `;
+                    break;
+                case 'dhongi':
+                    cardContentHtml = `
+                        <div class="role-title">🎭 DHONGI</div>
+                        <div class="role-word">${player.word}</div>
+                        <div class="role-description">You have NO word. Figure it out!</div>
+                    `;
+                    break;
+                case 'sahayatri':
+                    cardContentHtml = `
+                        <div class="role-word">${player.word}</div>
+                    `;
+                    break;
+            }
+            
+            roleCard.innerHTML = cardContentHtml;
+            
+            // Determine which button to show after role is revealed
+            const nextPlayerBtn = document.getElementById('next-player-reveal-btn'); // For non-retaining direct next
+            const passDeviceTriggerBtn = document.getElementById('pass-device-trigger-btn'); // For retaining to next interstitial
+            const startDiscussionBtn = document.getElementById('start-discussion-final-btn');
+
+            // Hide all by default
+            nextPlayerBtn.style.display = 'none';
+            passDeviceTriggerBtn.style.display = 'none';
+            startDiscussionBtn.style.display = 'none';
+
+
+            if (gameState.currentPlayerIndex < gameState.players.length - 1) {
+                if (gameState.retainingPlayersMode) {
+                    // If retaining players, show the button that leads to the pass device screen for the next player
+                    passDeviceTriggerBtn.style.display = 'inline-block';
+                } else {
+                    // If not retaining players (new game), go directly to next player reveal preparation
+                    nextPlayerBtn.style.display = 'inline-block';
+                }
+            } else {
+                // Last player, always show start discussion
+                startDiscussionBtn.style.display = 'inline-block';
+            }
+        }
+        
+        // This function will be called by the "Next Player" and "Next Player's Turn" buttons
+        function incrementPlayerAndTransitionToReveal() {
+            gameState.currentPlayerIndex++;
+            transitionToPlayerReveal(); // This will decide if interstitial or direct reveal
+        }
+
+        // Discussion phase
+        function startDiscussion() {
+            // Update activePlayers list now that names are final
+            gameState.activePlayers = gameState.players.filter(p => !p.eliminated).map(p => p.id);
+            updateActivePlayersList();
+            
+            const firstSpeaker = gameState.players.find(p => p.id === gameState.firstSpeakerId);
+            if (firstSpeaker) {
+                document.getElementById('first-speaker-name').textContent = firstSpeaker.name;
+            } else {
+                document.getElementById('first-speaker-name').textContent = 'Someone random'; 
+            }
+            showScreen('discussion-screen');
+            startDiscussionTimer();
+        }
+
+        function updateActivePlayersList() {
+            const activePlayersDiv = document.getElementById('active-players');
+            activePlayersDiv.innerHTML = '';
+            
+            gameState.activePlayers.forEach(playerId => {
+                const player = gameState.players.find(p => p.id === playerId);
+                if (player && !player.eliminated) { 
+                    const playerTag = document.createElement('div');
+                    playerTag.className = 'player-tag';
+                    playerTag.textContent = player.name; // Use player.name directly
+                    activePlayersDiv.appendChild(playerTag);
+                }
+            });
+        }
+
+        function startDiscussionTimer() {
+            let timeLeft = 180; 
+            const timer = document.getElementById('discussion-timer');
+            
+            if (gameState.discussionInterval) {
+                clearInterval(gameState.discussionInterval);
+            }
+
+            gameState.discussionInterval = setInterval(() => {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                timer.textContent = `Time: ${minutes}:${seconds.toString().padStart(2, '0')}`;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(gameState.discussionInterval);
+                    timer.textContent = "Time's up!";
+                }
+                timeLeft--;
+            }, 1000);
+        }
+
+        function showRules() {
+            showScreen('rules-screen'); // Show the new in-game rules screen
+        }
+
+        // Voting phase
+        function startVoting() {
+            const votingOptions = document.getElementById('voting-options');
+            votingOptions.innerHTML = '';
+            gameState.votes = {};
+            
+            gameState.activePlayers.forEach(playerId => {
+                const player = gameState.players.find(p => p.id === playerId);
+                const voteOption = document.createElement('div');
+                voteOption.className = 'vote-option';
+                voteOption.onclick = () => selectVoteOption(voteOption, playerId);
+                voteOption.innerHTML = `
+                    <input type="radio" name="vote" value="${playerId}">
+                    <strong>${player.name}</strong>
+                `;
+                votingOptions.appendChild(voteOption);
+            });
+            
+            showScreen('voting-screen');
+        }
+
+        function selectVoteOption(element, playerId) {
+            document.querySelectorAll('.vote-option').forEach(option => {
+                option.classList.remove('selected');
+                option.querySelector('input').checked = false; 
+            });
+            element.classList.add('selected');
+            element.querySelector('input').checked = true;
+        }
+
+        function backToDiscussion() {
+            showScreen('discussion-screen');
+        }
+
+        async function processVotes() {
+            const checkedVote = document.querySelector('input[name="vote"]:checked');
+            if (!checkedVote) {
+                alert('Please select someone to vote for!');
+                return;
+            }
+            
+            const votedPlayerId = parseInt(checkedVote.value);
+            
+            const voteCounts = {};
+            gameState.activePlayers.forEach(playerId => {
+                voteCounts[playerId] = 0; 
+            });
+            // Simplified voting logic: The selected player gets 1 vote.
+            // In a real game, each player would submit their vote.
+            voteCounts[votedPlayerId] = 1;
+
+
+            let maxVotes = 0;
+            let playersWithMaxVotes = [];
+            
+            Object.entries(voteCounts).forEach(([playerId, votes]) => {
+                if (votes > maxVotes) {
+                    maxVotes = votes;
+                    playersWithMaxVotes = [parseInt(playerId)];
+                } else if (votes === maxVotes) {
+                    playersWithMaxVotes.push(parseInt(playerId));
+                }
+            });
+            
+            if (playersWithMaxVotes.length === 1) {
+                handleEliminationSequence(playersWithMaxVotes[0], voteCounts);
+            } else {
+                showResults("No Elimination", "No one was clearly voted out.", true);
+            }
+        }
+
+        function handleEliminationSequence(playerId, voteCounts) {
+            const eliminatedPlayer = gameState.players.find(p => p.id === playerId);
+            if (eliminatedPlayer) {
+                eliminatedPlayer.eliminated = true;
+                gameState.activePlayers = gameState.activePlayers.filter(id => id !== playerId);
+            }
+
+            gameState.eliminatedPlayerContext = { // Store context for later processing
+                eliminatedPlayer: eliminatedPlayer,
+                voteCounts: voteCounts
+            };
+            
+            // Check for Sahayatri's turn to guess
+            if (eliminatedPlayer && eliminatedPlayer.role === 'sahayatri') {
+                showSahayatriGuessModal();
+            } else if (eliminatedPlayer && eliminatedPlayer.role === 'dhongi') {
+                showDhongiRevealModal();
+            } else {
+                // No special pop-up needed, proceed directly to results
+                finalizeEliminationAndShowResults();
+            }
+        }
+
+        function showSahayatriGuessModal() {
+            const eliminatedPlayer = gameState.eliminatedPlayerContext.eliminatedPlayer;
+            document.getElementById('sahayatri-guess-player-name').textContent = `${eliminatedPlayer.name}, you've been eliminated!`;
+            document.getElementById('sahayatri-guess-input').value = ''; // Clear previous input
+            document.getElementById('sahayatri-guess-modal').style.display = 'flex';
+            document.getElementById('sahayatri-guess-input').focus();
+        }
+
+        function processSahayatriGuess(wantsToGuess) {
+            const eliminatedPlayer = gameState.eliminatedPlayerContext.eliminatedPlayer;
+            let resultContentAddition = '';
+            
+            if (wantsToGuess) {
+                const guessInput = document.getElementById('sahayatri-guess-input');
+                const guess = guessInput.value.trim();
+
+                if (guess.toLowerCase() === gameState.wordPair.janta.toLowerCase()) {
+                    const dhongiStillAlive = gameState.activePlayers.some(id => {
+                        const player = gameState.players.find(p => p.id === id);
+                        return player && player.role === 'dhongi';
+                    });
+
+                    if (dhongiStillAlive) {
+                        // Sahayatri wins by guessing correctly and Dhongi is still alive
+                        gameState.eliminatedPlayerContext.gameEnded = true;
+                        gameState.eliminatedPlayerContext.winnerRole = 'sahayatri';
+                        resultContentAddition = `<p class="winner">Sahayatri (${eliminatedPlayer.name}) correctly guessed the Janta's word: <strong>${gameState.wordPair.janta}</strong></p><p>Amazing deduction skills!</p>`;
+                    } else {
+                        resultContentAddition = `<p>Sahayatri (${eliminatedPlayer.name}) guessed correctly, but the Dhongi was already eliminated! Janta/Civilian team already won.</p>`;
+                    }
+                } else {
+                    resultContentAddition = `<p>Sahayatri (${eliminatedPlayer.name}) guessed incorrectly.</p>`;
+                }
+            } else { // Skipped guess
+                resultContentAddition = `<p>Sahayatri (${eliminatedPlayer.name}) chose not to guess.</p>`;
+            }
+            
+            gameState.eliminatedPlayerContext.resultContentAddition = resultContentAddition; // Store for results screen
+            finalizeEliminationAndShowResults();
+        }
+
+        function showDhongiRevealModal() {
+            const eliminatedPlayer = gameState.eliminatedPlayerContext.eliminatedPlayer;
+            document.getElementById('dhongi-reveal-player-name').textContent = `${eliminatedPlayer.name}, you've been eliminated!`;
+            // Clear radio button selection
+            document.querySelectorAll('input[name="dhongi-reveal-choice"]').forEach(radio => radio.checked = false);
+            document.getElementById('dhongi-reveal-modal').style.display = 'flex';
+        }
+
+function processDhongiReveal() {
+            const context = gameState.eliminatedPlayerContext;
+            const player = context.eliminatedPlayer;
+            const selectedChoice = document.querySelector('input[name="dhongi-reveal-choice"]:checked').value;
+            const guessInput = document.getElementById('dhongi-word-guess');
+            const userGuess = guessInput.value.trim().toLowerCase();
+            
+            const targetWord = (selectedChoice === 'janta') ? 
+                gameState.wordPair.janta.toLowerCase() : 
+                gameState.wordPair.dhongi.toLowerCase();
+
+            let resultContentAddition = '';
+
+            if (userGuess === targetWord) {
+                // Dhongi guessed correctly: Override results to Dhongi Win
+                gameState.eliminatedPlayerContext.gameEnded = true;
+                gameState.eliminatedPlayerContext.winnerRole = 'dhongi';
+                resultContentAddition = `<p class="winner"><strong>DHONGI WINS!</strong></p><p>${player.name} correctly guessed the ${selectedChoice} word: <strong>${userGuess.toUpperCase()}</strong>.</p>`;
+            } else {
+                // Dhongi failed: Proceed with elimination
+                resultContentAddition = `<p class="loser"><strong>DHONGI FAILED!</strong></p><p>${player.name} guessed "${userGuess}", but the word was "${targetWord}".</p>`;
+            }
+
+            gameState.eliminatedPlayerContext.resultContentAddition = resultContentAddition;
+            guessInput.value = ""; 
+            finalizeEliminationAndShowResults();
+        }
+
+        function hideModal() {
+            document.getElementById('sahayatri-guess-modal').style.display = 'none';
+            document.getElementById('dhongi-reveal-modal').style.display = 'none';
+        }
+
+        function finalizeEliminationAndShowResults() {
+            hideModal(); // Close any active modals
+            const { eliminatedPlayer, voteCounts, gameEnded, winnerRole, resultContentAddition } = gameState.eliminatedPlayerContext;
+
+            let resultTitle = `Round ${gameState.round} Complete`;
+            let resultContent = '';
+            let currentWinnerRole = winnerRole; // Use the winnerRole determined by Sahayatri if applicable
+            let currentGameEnded = gameEnded; // Use gameEnded determined by Sahayatri if applicable
+            
+            let voteResultsHtml = '<h3>Vote Results:</h3>';
+            Object.entries(voteCounts).forEach(([pId, votes]) => {
+                const player = gameState.players.find(p => p.id === parseInt(pId));
+                if (player) {
+                    voteResultsHtml += `<p>${player.name}: ${votes} vote(s)</p>`;
+                }
+            });
+            
+            if (eliminatedPlayer) {
+                voteResultsHtml += `<hr><p><strong>${eliminatedPlayer.name} has been eliminated!</strong></p>`;
+                voteResultsHtml += `<p>Role: <strong>${eliminatedPlayer.role.toUpperCase()}</strong></p>`;
+                if (resultContentAddition) {
+                    voteResultsHtml += resultContentAddition; // Add Sahayatri/Dhongi specific content
+                }
+            }
+            resultContent += voteResultsHtml;
+
+            // Check general win conditions after all last acts (if game not already ended by Sahayatri)
+            if (!currentGameEnded) { 
+                const dhongiAlive = gameState.activePlayers.some(id => {
+                    const player = gameState.players.find(p => p.id === id);
+                    return player && player.role === 'dhongi';
+                });
+                
+                if (eliminatedPlayer && eliminatedPlayer.role === 'dhongi') {
+                    resultTitle = '🎉 Janta & Sahayatri Win!';
+                    resultContent += '<p class="winner">The Dhongi has been found and eliminated!</p>';
+                    currentGameEnded = true;
+                    currentWinnerRole = 'janta'; 
+                } else if (!dhongiAlive && gameState.activePlayers.length > 0) { 
+                    resultTitle = '🎉 Janta & Sahayatri Win!';
+                    resultContent += '<p class="winner">All Dhongi have been eliminated!</p>';
+                    currentGameEnded = true;
+                    currentWinnerRole = 'janta';
+                } else if (dhongiAlive && gameState.activePlayers.length <= 2) { 
+                    resultTitle = '🎭 Dhongi Wins!';
+                    resultContent += '<p class="winner">The Dhongi survived to the final players!</p>';
+                    currentGameEnded = true;
+                    currentWinnerRole = 'dhongi';
+                } else {
+                    // Game continues to next round
+                    resultTitle = `Round ${gameState.round} Complete`;
+                    resultContent += '<p>The game continues...</p>';
+                    gameState.round++;
+                }
+            }
+            
+            showResults(resultTitle, resultContent, !currentGameEnded, currentWinnerRole); 
+            // Clear context after use
+            gameState.eliminatedPlayerContext = null; 
+        }
+
+        function showResults(title, content, canContinue, winnerRole = null) {
+            document.getElementById('result-title').textContent = title;
+            
+            if (!canContinue && winnerRole) {
+                updateStats(winnerRole);
+            }
+            
+            // Clear content before potentially adding stats to prevent duplication
+            document.getElementById('result-content').innerHTML = content;
+
+            if (!canContinue) { // Only add stats if the game is actually over
+                document.getElementById('result-content').innerHTML += `<hr><div class="game-info">
+                    <h3>Session Stats</h3>
+                    <p>Games Played: ${gameStats.gamesPlayed}</p>
+                    <p>Dhongi Wins: ${gameStats.dhongiWins}</p>
+                    <p>Janta/Civilian Wins: ${gameStats.jantaWins}</p>
+                    <p>Sahayatri Wins: ${gameStats.sahayatriWins}</p>
+                </div>`;
+            }
+            
+            // Adjust button visibility based on game state
+            document.getElementById('start-next-discussion-round-btn').style.display = 'none';
+            document.getElementById('restart-same-players-btn').style.display = 'none';
+            document.getElementById('edit-players-btn').style.display = 'inline-block'; // Always show edit
+            document.getElementById('new-game-btn').style.display = 'inline-block'; // Always show new game
+
+            if (canContinue) {
+                document.getElementById('start-next-discussion-round-btn').style.display = 'inline-block';
+                gameState.gameOver = false;
+            } else {
+                // Game is over, show restart with same players
+                document.getElementById('restart-same-players-btn').style.display = 'inline-block';
+                gameState.gameOver = true;
+            }
+            
+            showScreen('results-screen');
+            if (gameState.discussionInterval) {
+                clearInterval(gameState.discussionInterval); 
+            }
+        }
+
+        function startNextRound() {
+            // This button is for when game is NOT over, just moving to next discussion round
+            if (!gameState.gameOver) { 
+                // Re-initialize active players for new discussion round, in case someone was eliminated
+                gameState.activePlayers = gameState.players.filter(p => !p.eliminated).map(p => p.id);
+                // Determine a new first speaker from active players
+                gameState.firstSpeakerId = gameState.activePlayers[Math.floor(Math.random() * gameState.activePlayers.length)];
+                startDiscussion();
+            } else {
+                // Should not happen if button logic is correct, but as fallback
+                newGame(); 
+            }
+        }
+
+        function restartGameWithSamePlayers() {
+            // This is for when the game IS over, but want to play again with same people
+            startGame(true); // true means retaining players
+        }
+
+        function newGame() {
+            // Reset game state completely
+            gameState = {
+                players: [],
+                currentPlayerIndex: 0,
+                currentPlayer: null, // Reset current player
+                activePlayers: [],
+                wordPair: null,
+                availableWordPairs: [...wordPairs], // Reset available word pairs for a brand new game
+                votes: {},
+                round: 1,
+                gameOver: false,
+                firstSpeakerId: null,
+                nextPlayerId: 1, // Reset player ID counter
+                retainingPlayersMode: false, // Reset this flag for a new game
+                eliminatedPlayerContext: null
+            };
+            
+            document.getElementById('player-count').value = '6'; // Reset player count
+            document.getElementById('include-sahayatri').value = 'yes'; 
+            
+            showWelcome();
+        }
+
+        // Edit Players functionality
+        function showEditPlayersScreen() {
+            const editPlayerListDiv = document.getElementById('edit-player-list');
+            editPlayerListDiv.innerHTML = ''; // Clear previous inputs
+
+            gameState.players.forEach((player) => {
+                const playerEditItem = document.createElement('div');
+                playerEditItem.className = 'edit-player-item';
+                // Always use player.name for the value of the input, and for the label, show "Player ID"
+                playerEditItem.innerHTML = `
+                    <label for="edit-player-${player.id}">Player ${player.id}:</label>
+                    <input type="text" id="edit-player-${player.id}" value="${player.name}">
+                    <button class="btn btn-danger btn-small" onclick="deletePlayerFromEditList(this, ${player.id})">Delete</button>
+                `;
+                editPlayerListDiv.appendChild(playerEditItem);
+            });
+            showScreen('edit-players-screen');
+        }
+
+        function addPlayerToEditList() {
+            const newPlayerId = gameState.nextPlayerId++;
+            const newPlayer = {
+                id: newPlayerId,
+                name: `Player ${newPlayerId}`, // Default name for new player
+                role: 'janta', // Default role, will be reassigned on game start
+                word: '',
+                eliminated: false,
+                revealed: false,
+                nameEnteredYet: false // New players always need to enter name
+            };
+            gameState.players.push(newPlayer);
+            
+            const editPlayerListDiv = document.getElementById('edit-player-list');
+            const playerEditItem = document.createElement('div');
+            playerEditItem.className = 'edit-player-item';
+            playerEditItem.innerHTML = `
+                <label for="edit-player-${newPlayer.id}">Player ${newPlayer.id}:</label>
+                <input type="text" id="edit-player-${newPlayer.id}" value="${newPlayer.name}">
+                <button class="btn btn-danger btn-small" onclick="deletePlayerFromEditList(this, ${newPlayer.id})">Delete</button>
+            `;
+            editPlayerListDiv.appendChild(playerEditItem);
+
+            // Ensure player count is still valid
+            if (gameState.players.length > 20) {
+                alert('Maximum 20 players allowed!');
+                // Optionally remove the last added player if over limit
+            }
+        }
+
+        function deletePlayerFromEditList(buttonElement, playerId) {
+            if (gameState.players.length <= 3) {
+                alert('You need a minimum of 3 players to play Dhongi!');
+                return;
+            }
+
+            // Remove from gameState.players array
+            gameState.players = gameState.players.filter(player => player.id !== playerId);
+            
+            // Remove the corresponding HTML element
+            buttonElement.closest('.edit-player-item').remove();
+        }
+
+
+        function saveEditedPlayers() {
+            // Update names from the input fields
+            gameState.players.forEach(player => {
+                const inputElement = document.getElementById(`edit-player-${player.id}`);
+                if (inputElement) {
+                    player.name = inputElement.value.trim();
+                    // If a name was entered/edited and is not a default 'Player X' value, mark it as entered.
+                    // This heuristic checks for "Player " followed by one or more digits.
+                    player.nameEnteredYet = !(player.name.match(/^Player \d+$/)) && player.name.trim() !== '';
+                }
+            });
+
+            // Set game to over so that the results screen displays the "Restart" and "New Game" buttons
+            // and re-adds the session stats without duplication, prompting a fresh start.
+            gameState.gameOver = true;
+            showResults('Players Updated', 'Your player list has been updated. Start a new game!', false, null);
+        }
+
+        function cancelEditPlayers() {
+            // Simply go back to the results screen without saving changes
+            showResults(document.getElementById('result-title').textContent, document.getElementById('result-content').innerHTML, !gameState.gameOver, null);
+        }
+
+        let gameStats = {
+            gamesPlayed: 0,
+            dhongiWins: 0,
+            jantaWins: 0, 
+            sahayatriWins: 0 
+        };
+
+        function loadStats() {
+            // Stats are in-memory for this artifact.
+        }
+
+        function saveStats() {
+            // Stats are in-memory for this artifact.
+        }
+
+        function updateStats(winner) {
+            gameStats.gamesPlayed++;
+            switch(winner) {
+                case 'dhongi':
+                    gameStats.dhongiWins++;
+                    break;
+                case 'janta':
+                    gameStats.jantaWins++;
+                    break;
+                case 'sahayatri':
+                    gameStats.sahayatriWins++;
+                    break;
+            }
+            saveStats();
+        }
+
+        function playSound(type) {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            let frequency;
+            
+            switch(type) {
+                case 'reveal':
+                    frequency = 440; 
+                    break;
+                case 'eliminate':
+                    frequency = 220; 
+                    break;
+                case 'win':
+                    frequency = 660; 
+                    break;
+                default:
+                    return;
+            }
+            
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = frequency;
+            oscillator.type = 'sine';
+            
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.5);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadStats(); 
+            // Initialize availableWordPairs when the DOM is ready for the first game load
+            gameState.availableWordPairs = [...wordPairs]; 
+            showWelcome();
+        });
+
+        document.addEventListener('keydown', function(event) {
+            // Enter to proceed to next step
+            if (event.code === 'Enter') {
+                const activeScreen = document.querySelector('.screen.active');
+                if (activeScreen) {
+                    // Prioritize the confirm name button on role reveal screen
+                    const confirmNameBtn = document.getElementById('confirm-name-reveal-btn');
+                    if (activeScreen.id === 'role-reveal-screen' && confirmNameBtn && confirmNameBtn.style.display !== 'none' && !confirmNameBtn.disabled) {
+                        confirmNameBtn.click();
+                        event.preventDefault(); // Prevent default enter behavior (like form submission)
+                        return;
+                    }
+                    
+                    // Prioritize Save Changes button on edit players screen
+                    if (activeScreen.id === 'edit-players-screen' && document.getElementById('save-edited-players-btn') && document.getElementById('save-edited-players-btn').style.display !== 'none') {
+                        document.getElementById('save-edited-players-btn').click();
+                        event.preventDefault();
+                        return;
+                    }
+
+                    // For the new pass-device screen
+                    if (activeScreen.id === 'pass-device-screen') {
+                        const continueButton = document.getElementById('pass-device-continue-btn'); // Use specific ID
+                        if (continueButton && continueButton.style.display !== 'none' && !continueButton.disabled) {
+                            continueButton.click();
+                            event.preventDefault();
+                            return;
+                        }
+                    }
+
+                    const primaryButton = activeScreen.querySelector('.btn-success');
+                    if (primaryButton && primaryButton.style.display !== 'none' && !primaryButton.disabled) {
+                        primaryButton.click();
+                        event.preventDefault(); // Prevent default enter behavior (like form submission)
+                        return; 
+                    }
+                    const visibleButtons = Array.from(activeScreen.querySelectorAll('.btn')).filter(btn => btn.offsetWidth > 0 || btn.offsetHeight > 0);
+                    if (visibleButtons.length > 0) {
+                        // Exclude the name entry input from being clicked as a button
+                        const nonInputButtons = visibleButtons.filter(btn => (btn.tagName !== 'INPUT' || btn.type !== 'text') && !btn.disabled);
+                        if (nonInputButtons.length > 0) {
+                            nonInputButtons[0].click(); 
+                            event.preventDefault();
+                        }
+                    }
+                }
+            }
+        });
+
+        document.addEventListener('touchstart', function() {
+            if (window.AudioContext || window.webkitAudioContext) {
+                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+                if (audioContext.state === 'suspended') {
+                    audioContext.resume();
+                }
+            }
+        }, { once: true });
+
+    </script>
+</body>
+</html>
