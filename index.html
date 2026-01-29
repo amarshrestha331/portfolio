@@ -115,25 +115,6 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <button id="scroll-to-top" class="scroll-to-top"><i class="fas fa-arrow-up"></i>
     </button>
 
-    <script>
-        // Get the button
-        const scrollToTopButton = document.getElementById('scroll-to-top');
-
-        // Show the button when scrolling down
-        window.addEventListener('scroll', () => {
-            if (window.scrollY > 300) {
-                scrollToTopButton.classList.add('visible');
-            } else {
-                scrollToTopButton.classList.remove('visible');
-            }
-        });
-
-        // Scroll to the top when the button is clicked
-        scrollToTopButton.addEventListener('click', () => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-    </script>
-
     <nav class="navbar" id="navbar">
         <div class="logo">Amar Shrestha<span class="dot">.</span></div>
         <div class="hamburger">
@@ -447,25 +428,54 @@ document.addEventListener("DOMContentLoaded", function () {
 });
     </script>
 
-<footer>
-    <footer>
-        <div class="footer-left">
-            <a href="https://www.linkedin.com/in/amarshrestha/" target="_blank"><i class="fab fa-linkedin social-icon-footer"></i></a>
-            <a href="https://www.facebook.com/amarshresthaaa/" target="_blank"><i class="fab fa-facebook social-icon-footer"></i></a>
-            <a href="https://www.instagram.com/amar__shrestha/" target="_blank"><i class="fab fa-instagram social-icon-footer"></i></a>
-            <a href="https://telegram.me/AMS331" target="_blank"><i class="fab fa-telegram-plane social-icon-footer"></i></a>
-            <a href="mailto:amarshrestha331@gmail.com" target="_blank"><i class="fa fa-envelope social-icon-footer"></i></a>
-            <a href="Dhongi.html" target="_blank">
-            <img src="Dhongi_Footer.png" alt="Dhongi Footer" width="30" height="30"></a>
-        </div>
-        <div class="footer-center">
-            Crafted with love
-        </div>
-    </footer>
+<footer id="main-footer">
+    <div class="footer-left">
+        <a href="https://www.linkedin.com/in/amarshrestha/" target="_blank"><i class="fab fa-linkedin social-icon-footer"></i></a>
+        <a href="https://www.facebook.com/amarshresthaaa/" target="_blank"><i class="fab fa-facebook social-icon-footer"></i></a>
+        <a href="https://www.instagram.com/amar__shrestha/" target="_blank"><i class="fab fa-instagram social-icon-footer"></i></a>
+        <a href="https://telegram.me/AMS331" target="_blank"><i class="fab fa-telegram-plane social-icon-footer"></i></a>
+        <a href="mailto:amarshrestha331@gmail.com"><i class="fa fa-envelope social-icon-footer"></i></a>
+        <a href="Dhongi.html" target="_blank">
+            <img src="Dhongi_Footer.png" alt="Dhongi Footer">
+        </a>
+    </div>
+    <div class="footer-center">
+        <p>Crafted with love</p>
+    </div>
+
+    <script>
+const btn = document.getElementById("scroll-to-top");
+const footer = document.getElementById("main-footer");
+
+window.addEventListener("scroll", () => {
+    // 1. Show/Hide button
+    if (window.scrollY > 300) {
+        btn.style.display = "block";
+    } else {
+        btn.style.display = "none";
+    }
+
+    // 2. Stop above footer logic
+    const footerRect = footer.getBoundingClientRect();
+    const windowHeight = window.innerHeight;
+
+    // If the top of the footer enters the viewport
+    if (footerRect.top < windowHeight) {
+        // Calculate the distance from the bottom of the screen to the footer top
+        // and add 20px of padding
+        const offset = windowHeight - footerRect.top + 20;
+        btn.style.bottom = offset + "px";
+    } else {
+        // Stay at default bottom position
+        btn.style.bottom = "20px";
+    }
+});
+
+// Scroll to top
+btn.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+</script>
+</footer>
 </body>
 </html>
-
-
-
-
-
