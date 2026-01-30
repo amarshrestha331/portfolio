@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="dhongi_icon.png" type="image/x-icon">
     <title>Dhongi - Akhir ko hola</title>
     <style>
         * {
@@ -477,10 +476,61 @@
                 margin-bottom: 10px;
             }
         }
+
+.container {
+    max-width: 500px;
+    width: 90%;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    backdrop-filter: blur(10px);
+    position: relative; /* Add this to anchor the button */
+}
+
+.download-icon-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    width: 35px;
+    height: 35px;
+    background: rgba(255, 255, 255, 0.05); /* Subtle circle background */
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #e2d8d8;
+    transition: all 0.3s ease;
+    z-index: 10; /* Ensures it stays above game elements */
+}
+
+.download-icon-btn svg {
+    width: 20px;
+    height: 20px;
+}
+
+.download-icon-btn:hover {
+    background: rgba(233, 217, 217, 0.1);
+    transform: translateY(-2px);
+    color: #ffffff;
+}
+
+.download-icon-btn:active {
+    transform: translateY(0);
+}
+
     </style>
 </head>
 <body>
     <div class="container">
+<button id="downloadBtn" class="download-icon-btn" title="Download Game">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 15V3m0 12l-4-4m4 4l4-4M2 17l.621 2.485A2 2 0 004.561 21H19.439a2 2 0 001.94-1.515L22 17" 
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </button>
         <div class="header">
             <h1>🎭 DHONGI</h1>
             <p>Khojum Hami Madhya Ko Dhongi</p>
@@ -2769,7 +2819,25 @@ function processDhongiReveal() {
             }
         }, { once: true });
 
+document.getElementById('downloadBtn').addEventListener('click', function() {
+    // 1. Get the entire HTML content of the current page
+    const htmlContent = document.documentElement.outerHTML;
+    
+    // 2. Create a Blob with the content (specifying it as an HTML file)
+    const blob = new Blob([htmlContent], { type: 'text/html' });
+    
+    // 3. Create a temporary 'a' tag to trigger the download
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'Dhongi_Game'; // Set your preferred filename here
+    
+    // 4. Programmatically click the link and clean up
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(link.href);
+});
+
     </script>
 </body>
-
 </html>
