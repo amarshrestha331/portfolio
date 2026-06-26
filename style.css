@@ -727,7 +727,12 @@ border: 1px solid #eee;
 border-radius: 8px;
 padding: 20px;
 box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-width: 640px;
+}
+
+.experience-card:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+  justify-self: center;
+  width: 50%; /* roughly matches one card width in the 2-col grid */
 }
 
 /* Header Section: Logo and Timeline */
