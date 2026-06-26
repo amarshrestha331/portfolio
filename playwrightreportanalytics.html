@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Test Result Analytics Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              DEFAULT: '#32CF74',
+              dark: '#1C9B51',
+              light: '#66E099',
+              soft: '#8EE0B0',
+              tint: '#F9FFF9',
+              alert: '#CEF9FF',
+            },
+          },
+          fontFamily: {
+            sans: ['Arial', 'Helvetica', 'sans-serif'],
+          },
+        },
+      },
+    };
+  </script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+  <link rel="stylesheet" href="styleplaywright.css?v=10" />
+</head>
+<body class="bg-brand-tint text-slate-900 min-h-screen font-sans">
+
+  <!-- Header -->
+  <header class="bg-white border-b border-slate-200 shadow-sm sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-3 h-3 rounded-full bg-brand"></div>
+        <div>
+          <h1 class="text-2xl font-bold text-slate-900">Test Result Analytics</h1>
+          <p class="hidden sm:block text-sm text-slate-500">Upload a Playwright test-results ZIP to visualize execution health</p>
+        </div>
+      </div>
+      <button id="resetBtn" class="hidden text-sm bg-slate-100 hover:bg-slate-200 text-slate-700 px-5 py-2 rounded-full font-medium transition">
+        Upload Another
+      </button>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-6 py-8">
+
+    <!-- Upload Section -->
+    <section id="uploadSection">
+      <div id="dropZone" class="border-2 border-dashed border-slate-300 rounded-2xl bg-white p-16 text-center hover:border-brand hover:bg-brand-tint transition cursor-pointer">
+        <div class="mx-auto w-16 h-16 bg-brand-light/30 rounded-full flex items-center justify-center mb-4">
+          <svg class="w-8 h-8 text-brand-dark" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.9A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+          </svg>
+        </div>
+        <h2 class="text-lg font-semibold text-slate-900 mb-1">Drop your Playwright report here</h2>
+        <p class="text-sm text-slate-500 mb-4">or click to browse</p>
+        <input type="file" id="fileInput" accept=".zip,.html,.htm" class="hidden" />
+      </div>
+
+      <div id="loadingState" class="hidden mt-6 bg-white rounded-2xl border border-slate-200 p-8">
+        <div class="flex items-center gap-4">
+          <div class="animate-spin w-6 h-6 border-3 border-brand border-t-transparent rounded-full"></div>
+          <div class="flex-1">
+            <p id="loadingMessage" class="font-medium text-slate-900">Processing ZIP...</p>
+            <div class="mt-2 bg-slate-100 rounded-full h-2 overflow-hidden">
+              <div id="progressBar" class="bg-brand h-full rounded-full transition-all" style="width: 0%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="errorState" class="hidden mt-6 bg-red-50 border border-red-200 rounded-2xl p-6">
+        <h3 class="font-semibold text-red-900 mb-1">Could not parse ZIP</h3>
+        <p id="errorMessage" class="text-sm text-red-700"></p>
+      </div>
+    </section>
+
+    <!-- Dashboard Section -->
+    <section id="dashboardSection" class="hidden space-y-6">
+
+      <!-- Warning Banner -->
+      <div id="warningBanner" class="hidden bg-brand-alert border border-cyan-200 rounded-2xl p-4 flex items-start gap-3">
+        <svg class="w-5 h-5 text-cyan-700 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 6a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 6zm0 9a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd"/>
+        </svg>
+        <div>
+          <h3 class="font-semibold text-cyan-900 text-sm">Incomplete data</h3>
+          <p id="warningMessage" class="text-sm text-cyan-900/80 mt-1"></p>
+        </div>
+      </div>
+
+      <!-- Run Metadata -->
+      <div id="metaBar" class="hidden flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-slate-600">
+        <div class="flex items-center gap-2">
+          <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+          <span>Test run: <span id="metaStartTime" class="font-medium text-slate-900">—</span></span>
+        </div>
+        <div class="flex items-center gap-2">
+          <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+          <span>Total execution: <span id="metaDuration" class="font-medium text-slate-900">—</span></span>
+        </div>
+      </div>
+
+      <!-- Summary Cards (click to filter) -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+        <div class="stat-card bg-white rounded-2xl border border-slate-200 p-5" data-hint="All tests in this run: passed, failed, flaky, and skipped combined.">
+          <p class="text-xs font-medium text-slate-500 uppercase tracking-wide">Total Tests</p>
+          <p id="statTotal" class="text-3xl font-bold text-slate-900 mt-1">0</p>
+        </div>
+        <div class="stat-card stat-clickable bg-white rounded-2xl border border-slate-200 p-5" data-filter="passed" role="button" tabindex="0" data-hint="Tests that completed successfully on their final attempt. Click to filter the table.">
+          <p class="text-xs font-medium text-brand-dark uppercase tracking-wide">Passed</p>
+          <p id="statPassed" class="text-3xl font-bold text-brand-dark mt-1">0</p>
+        </div>
+        <div class="stat-card stat-clickable bg-white rounded-2xl border border-slate-200 p-5" data-filter="failed" role="button" tabindex="0" data-hint="Tests that failed on their final attempt, after retries if any. Click to filter the table.">
+          <p class="text-xs font-medium text-red-600 uppercase tracking-wide">Failed</p>
+          <p id="statFailed" class="text-3xl font-bold text-red-700 mt-1">0</p>
+        </div>
+        <div class="stat-card stat-clickable bg-white rounded-2xl border border-slate-200 p-5" data-filter="flaky" role="button" tabindex="0" data-hint="Tests that initially failed but passed after a retry. Unstable, not yet broken. Click to filter the table.">
+          <p class="text-xs font-medium text-amber-600 uppercase tracking-wide">Flaky</p>
+          <p id="statFlaky" class="text-3xl font-bold text-amber-700 mt-1">0</p>
+        </div>
+        <div class="stat-card stat-clickable bg-white rounded-2xl border border-slate-200 p-5" data-filter="skipped" role="button" tabindex="0" data-hint="Tests that were not executed via test.skip(), unmet conditions, or filtering. Click to filter the table.">
+          <p class="text-xs font-medium text-slate-500 uppercase tracking-wide">Skipped</p>
+          <p id="statSkipped" class="text-3xl font-bold text-slate-600 mt-1">0</p>
+        </div>
+        <div class="stat-card bg-white rounded-2xl border border-slate-200 p-5" data-hint="Passed ÷ (Total minus Skipped). Flaky tests count toward the denominator but not the numerator; skipped tests are excluded entirely.">
+          <p class="text-xs font-medium text-brand-dark uppercase tracking-wide">Pass Rate</p>
+          <p id="statPassRate" class="text-3xl font-bold text-brand-dark mt-1">0%</p>
+        </div>
+      </div>
+
+      <!-- Charts -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div class="bg-white rounded-2xl border border-slate-200 p-6">
+          <h3 class="font-semibold text-slate-900 mb-4">Test Distribution</h3>
+          <div class="relative h-64"><canvas id="pieChart"></canvas></div>
+        </div>
+        <div class="bg-white rounded-2xl border border-slate-200 p-6">
+          <h3 class="font-semibold text-slate-900 mb-4">Tests by Status</h3>
+          <div class="relative h-64"><canvas id="barChart"></canvas></div>
+        </div>
+        <div class="bg-white rounded-2xl border border-slate-200 p-6">
+          <h3 class="font-semibold text-slate-900 mb-4">Failure Categories</h3>
+          <div class="relative h-64"><canvas id="failureChart"></canvas></div>
+        </div>
+      </div>
+
+      <!-- Search + Filter -->
+      <div id="filterBar" class="bg-white rounded-2xl border border-slate-200 p-4 flex flex-col md:flex-row gap-3 md:items-center scroll-mt-4">
+        <input id="searchInput" type="text" placeholder="Search test name..." class="flex-1 px-4 py-2 border border-slate-300 rounded-full focus:outline-none focus:ring-2 focus:ring-brand" />
+        <div class="flex gap-2 flex-wrap">
+          <button class="filter-btn active px-4 py-2 rounded-full text-sm font-medium" data-filter="all">All</button>
+          <button class="filter-btn px-4 py-2 rounded-full text-sm font-medium" data-filter="passed">Passed</button>
+          <button class="filter-btn px-4 py-2 rounded-full text-sm font-medium" data-filter="failed">Failed</button>
+          <button class="filter-btn px-4 py-2 rounded-full text-sm font-medium" data-filter="flaky">Flaky</button>
+          <button class="filter-btn px-4 py-2 rounded-full text-sm font-medium" data-filter="skipped">Skipped</button>
+        </div>
+      </div>
+
+      <!-- Test Table -->
+      <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead class="bg-brand-tint border-b border-slate-200">
+              <tr>
+                <th class="text-left px-4 py-3 font-semibold text-slate-700">Test Name</th>
+                <th class="text-left px-4 py-3 font-semibold text-slate-700">Status</th>
+                <th class="text-left px-4 py-3 font-semibold text-slate-700">Duration</th>
+                <th class="text-left px-4 py-3 font-semibold text-slate-700">Retries</th>
+                <th class="text-left px-4 py-3 font-semibold text-slate-700">Evidence</th>
+                <th class="text-left px-4 py-3 font-semibold text-slate-700">Error</th>
+              </tr>
+            </thead>
+            <tbody id="testTableBody"></tbody>
+          </table>
+        </div>
+        <div id="emptyTable" class="hidden p-12 text-center text-slate-500 text-sm">No tests match the current filter.</div>
+        <div id="paginationBar" class="hidden border-t border-slate-100 px-4 py-3 flex flex-wrap items-center justify-between gap-3 text-sm text-slate-600">
+          <div class="flex items-center gap-2">
+            <label for="pageSize" class="text-slate-500">Show</label>
+            <select id="pageSize" class="pagination-select">
+              <option value="10" selected>10</option>
+              <option value="20">20</option>
+              <option value="30">30</option>
+              <option value="40">40</option>
+              <option value="50">50</option>
+            </select>
+            <span class="text-slate-500">per page</span>
+          </div>
+          <div class="flex items-center gap-3">
+            <span id="paginationLabel" class="text-slate-500"></span>
+            <div class="flex items-center gap-1">
+              <button id="prevPage" class="pagination-btn" aria-label="Previous page"><i class="fas fa-chevron-left"></i></button>
+              <span id="pageIndicator" class="px-2 text-slate-600 font-medium"></span>
+              <button id="nextPage" class="pagination-btn" aria-label="Next page"><i class="fas fa-chevron-right"></i></button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Insight panels (below the table) -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div id="clustersPanel" class="hidden bg-white rounded-2xl border border-slate-200 p-6">
+          <h3 class="font-semibold text-slate-900 mb-3">Failure Clusters</h3>
+          <p class="text-xs text-slate-500 mb-3">Failures grouped by error-message similarity — one fix often resolves an entire cluster.</p>
+          <div id="clustersBody" class="space-y-2"></div>
+        </div>
+        <div id="slowestPanel" class="hidden bg-white rounded-2xl border border-slate-200 p-6">
+          <h3 class="font-semibold text-slate-900 mb-3">Slowest Steps</h3>
+          <p class="text-xs text-slate-500 mb-3">Top 15 individual step actions by duration across this run.</p>
+          <div id="slowestBody" class="space-y-1"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Test Detail Modal -->
+  <div id="detailModal" class="hidden fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-white rounded-2xl w-[97vw] max-w-[1600px] my-8 max-h-[94vh] overflow-y-auto">
+      <div class="sticky top-0 bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between z-10">
+        <h2 id="modalTitle" class="font-bold text-slate-900 text-lg">Test Details</h2>
+        <button id="closeModal" class="text-slate-400 hover:text-slate-700 text-2xl leading-none">&times;</button>
+      </div>
+      <div id="modalContent" class="p-6 space-y-6"></div>
+    </div>
+  </div>
+
+  <script src="playwrightparser.js?v=9"></script>
+  <script src="playwrightapp.js?v=20"></script>
+</body>
+</html>
